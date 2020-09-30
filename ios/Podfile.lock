@@ -1,0 +1,86 @@
+PODS:
+  - aliossflutter (0.0.1):
+    - AliyunOSSiOS
+    - Flutter
+  - AliyunOSSiOS (2.10.8)
+  - city_pickers (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
+  - image_selector (0.0.1):
+    - Flutter
+    - SDWebImage
+    - TZImagePickerController
+    - TZImagePreviewController
+  - package_info (0.0.1):
+    - Flutter
+  - path_provider (0.0.1):
+    - Flutter
+  - SDWebImage (5.9.1):
+    - SDWebImage/Core (= 5.9.1)
+  - SDWebImage/Core (5.9.1)
+  - shared_preferences (0.0.1):
+    - Flutter
+  - sqflite (0.0.1):
+    - Flutter
+    - FMDB (~> 2.7.2)
+  - TZImagePickerController (3.4.2)
+  - TZImagePreviewController (0.3.1):
+    - TZImagePickerController (>= 3.1.7)
+
+DEPENDENCIES:
+  - aliossflutter (from `.symlinks/plugins/aliossflutter/ios`)
+  - city_pickers (from `.symlinks/plugins/city_pickers/ios`)
+  - Flutter (from `Flutter`)
+  - image_selector (from `.symlinks/plugins/image_selector/ios`)
+  - package_info (from `.symlinks/plugins/package_info/ios`)
+  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - sqflite (from `.symlinks/plugins/sqflite/ios`)
+
+SPEC REPOS:
+  trunk:
+    - AliyunOSSiOS
+    - FMDB
+    - SDWebImage
+    - TZImagePickerController
+    - TZImagePreviewController
+
+EXTERNAL SOURCES:
+  aliossflutter:
+    :path: ".symlinks/plugins/aliossflutter/ios"
+  city_pickers:
+    :path: ".symlinks/plugins/city_pickers/ios"
+  Flutter:
+    :path: Flutter
+  image_selector:
+    :path: ".symlinks/plugins/image_selector/ios"
+  package_info:
+    :path: ".symlinks/plugins/package_info/ios"
+  path_provider:
+    :path: ".symlinks/plugins/path_provider/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
+  sqflite:
+    :path: ".symlinks/plugins/sqflite/ios"
+
+SPEC CHECKSUMS:
+  aliossflutter: a337e4efedfe12ab737873ea493c8713cc60070b
+  AliyunOSSiOS: 8db92936545593b9e5c66d680ef2ac0738946651
+  city_pickers: b0370f4c35c201723b5b7fcce10ec29b59d5bc35
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  image_selector: 655e7adabe8f6b954349ce5c90b0fede87d4ed18
+  package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
+  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  SDWebImage: a990c053fff71e388a10f3357edb0be17929c9c5
+  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
+  sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
+  TZImagePickerController: cc0b74d5f01ab4cddcc24dcdfc3c7d68e6261056
+  TZImagePreviewController: b250c3819119f1b006f103ad44065d3f771a0e78
+
+PODFILE CHECKSUM: b1f7a399522c118a74b177b13c01eca692aa7e6d
+
+COCOAPODS: 1.9.2
