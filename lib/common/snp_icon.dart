@@ -29,4 +29,5 @@ class SnpIcon {
   static const IconData invite = const IconData(0xe61a, fontFamily: "SnpIcon");
   static const IconData setting = const IconData(0xe624, fontFamily: "SnpIcon");
   static const IconData edit = const IconData(0xe630, fontFamily: "SnpIcon");
+  static const IconData image_failed = const IconData(0xe6eb, fontFamily: "SnpIcon");
 }

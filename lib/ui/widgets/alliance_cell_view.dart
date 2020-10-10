@@ -6,11 +6,10 @@
  * @Description:    
  * @author          dt
 */
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:snp/beans/alliance_bean.dart';
 import 'package:snp/common/common.dart';
+import 'package:snp/ui/widgets/web_image_view.dart';
 
 class AllianceCellView extends StatelessWidget {
   final AllianceBean bean;
@@ -29,48 +28,45 @@ class AllianceCellView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: CachedNetworkImage(
-        imageUrl: bean.flagPic+'_org',
-        imageBuilder: (context, imageProvider) => Container(
-          height: sHeight(90),
-          margin: sInsetsHV(0, 5),
-          decoration: BoxDecoration(
-            // shape: BoxShape.circle,
-            borderRadius: BorderRadius.circular(10),
-            image: DecorationImage(
-              image: imageProvider,
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: _contentView(),
-        ),
-        placeholder: (context, url) => _placeHolderView(
-          Stack(
-            children: [
-              Center(
-                child: SpinKitDoubleBounce(
-                  color: CColor.mainColor,
-                  size: sWidth(50),
-                ),
-              ),
-              _contentView(),
-            ],
-          ),
-        ),
-        errorWidget: (context, url, error) => _placeHolderView(_contentView()),
+      child: WebImage(
+        url: bean.flagPic,
+        margin: sInsetsHV(0, 5),
+        height: sHeight(90),
+        radius: 10,
+        overView: _contentView(),
       ),
+      // child: CachedNetworkImage(
+      //   imageUrl: bean.flagPic+'_org11',
+      //   imageBuilder: (context, imageProvider) => Container(
+      //     height: sHeight(90),
+      //     margin: sInsetsHV(0, 5),
+      //     decoration: BoxDecoration(
+      //       // shape: BoxShape.circle,
+      //       borderRadius: BorderRadius.circular(10),
+      //       image: DecorationImage(
+      //         image: imageProvider,
+      //         fit: BoxFit.cover,
+      //       ),
+      //     ),
+      //     child: _contentView(),
+      //   ),
+      //   placeholder: (context, url) => _placeHolderView(
+      //     Stack(
+      //       children: [
+      //         Center(
+      //           child: SpinKitDoubleBounce(
+      //             color: CColor.mainColor,
+      //             size: sWidth(50),
+      //           ),
+      //         ),
+      //         _contentView(),
+      //       ],
+      //     ),
+      //   ),
+      //   errorWidget: (context, url, error) => _placeHolderView(_contentView()),
+      // ),
     );
   }
-
-  Widget _placeHolderView(child) => Container(
-        height: sHeight(90),
-        margin: sInsetsHV(0, 5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: CColor.bgPartColor,
-        ),
-        child: child,
-      );
 
   Widget _contentView() => Container(
         padding: sInsetsAll(10, sc: false),
