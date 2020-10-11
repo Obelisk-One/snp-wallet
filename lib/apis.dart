@@ -22,6 +22,12 @@ class API {
   static final String allianceBrief = 'api/v1/league/bulletin';
   static final String allianceMineMessage = 'api/v1/league/mine';
   static final String isInAlliance = 'api/v1/league/verify/join';
+  static final String allianceApply = 'api/v1/league/manager';
+  static final String allianceStimulate = 'api/v1/league/stimulate';
+
+  static final String isInLevelTow = 'api/v1/league/verify/level2';
+  static final String applyJoinToAlliance = 'api/v1/league/join';
+  // static final String isInLevelTow = 'api/v1/league/verify/level2';
 
   static final String wallet = 'api/v1/wallet/list';
 }

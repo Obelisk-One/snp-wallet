@@ -9,6 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:snp/beans/alliance_bean.dart';
 import 'package:snp/common/common.dart';
+import 'package:snp/ui/pages/news/apply_join_page.dart';
 import 'package:snp/ui/widgets/web_image_view.dart';
 
 class AllianceCellView extends StatelessWidget {
@@ -102,7 +103,7 @@ class AllianceCellView extends StatelessWidget {
                           width: sWidth(70),
                           height: sHeight(23),
                           elevation: 0,
-                          onClick: () {},
+                          onClick: () => RouteUtil.showModelPage(ApplyJoinPage()),
                         )
                       : Text(
                           bean.exist ? '已加入' : '',

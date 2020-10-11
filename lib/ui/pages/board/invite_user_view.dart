@@ -6,11 +6,9 @@
  * @Description:    
  * @author          dt
 */
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:snp/common/common.dart';
-import 'package:snp/common/utils/oss_util.dart';
 import 'package:snp/main.dart';
 import 'package:snp/ui/store/main_store.dart';
 import 'package:snp/ui/widgets/image_selector_view.dart';

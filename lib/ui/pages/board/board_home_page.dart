@@ -11,11 +11,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:snp/beans/alliance_apply_bean.dart';
 import 'package:snp/common/common.dart';
 import 'package:snp/ui/base/base_stateful.dart';
 import 'package:snp/ui/pages/board/invite_user_view.dart';
 import 'package:snp/ui/pages/board/store/board_home.dart';
+import 'package:snp/ui/store/main_store.dart';
 import 'package:snp/ui/widgets/circle_loader_view.dart';
+import 'package:snp/ui/widgets/snp_list_view.dart';
 import 'package:snp/ui/widgets/tab_view.dart';
 
 class BoardHomePage extends StatefulWidget {
@@ -136,16 +139,32 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
           ),
           SliverOpacity(
             opacity: _showFirst ? 1 : 0,
+            // sliver: SliverToBoxAdapter(
+            //   child: SListView(
+            //     apiPath: API.allianceApply,
+            //     params: {
+            //       'league_id': globalMainStore().allianceId,
+            //     },
+            //     itemView: (index, item) {
+            //       AllianceApplyBean _bean = AllianceApplyBean.fromJson(item);
+            //       return Container(
+            //         child: Text(_bean.message),
+            //       );
+            //     },
+            //   ),
+            // ),
             sliver: SliverList(
-              delegate:
-                  SliverChildBuilderDelegate((BuildContext context, int index) {
-                return Container(
-                  height: 50,
-                  alignment: Alignment.center,
-                  color: Colors.lightBlue[100 * (index % 9)],
-                  child: Text('list item $index'),
-                );
-              }, childCount: _showFirst ? 10 : 0),
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return Container(
+                    height: 50,
+                    alignment: Alignment.center,
+                    color: Colors.lightBlue[100 * (index % 9)],
+                    child: Text('list item $index'),
+                  );
+                },
+                childCount: _showFirst ? 10 : 0,
+              ),
             ),
           ),
           SliverOpacity(
@@ -164,7 +183,9 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
           ),
         ],
         onRefresh: () async {
-          await Future.delayed(Duration(seconds: 2), () {});
+          // await Future.delayed(Duration(seconds: 2), () {});
+          await _store.fetchAllianceApply();
+          await _store.fetchAllianceStimulate();
         },
         onLoad: _showFirst
             ? () async {

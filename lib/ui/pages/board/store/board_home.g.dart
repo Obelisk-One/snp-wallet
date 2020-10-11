@@ -69,6 +69,24 @@ mixin _$BoardHomeStore on BoardHomeMobx, Store {
     });
   }
 
+  final _$fetchAllianceApplyAsyncAction =
+      AsyncAction('BoardHomeMobx.fetchAllianceApply');
+
+  @override
+  Future fetchAllianceApply() {
+    return _$fetchAllianceApplyAsyncAction
+        .run(() => super.fetchAllianceApply());
+  }
+
+  final _$fetchAllianceStimulateAsyncAction =
+      AsyncAction('BoardHomeMobx.fetchAllianceStimulate');
+
+  @override
+  Future fetchAllianceStimulate() {
+    return _$fetchAllianceStimulateAsyncAction
+        .run(() => super.fetchAllianceStimulate());
+  }
+
   final _$BoardHomeMobxActionController =
       ActionController(name: 'BoardHomeMobx');
 

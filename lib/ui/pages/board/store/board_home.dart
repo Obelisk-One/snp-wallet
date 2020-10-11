@@ -14,7 +14,10 @@
 import 'dart:ui';
 
 import 'package:mobx/mobx.dart';
+import 'package:snp/apis.dart';
 import 'package:snp/common/base/base_color.dart';
+import 'package:snp/common/utils/http_util.dart';
+import 'package:snp/ui/store/main_store.dart';
 
 part 'board_home.g.dart';
 
@@ -91,4 +94,24 @@ abstract class BoardHomeMobx with Store {
   @action
   void setFecData(Map<String, dynamic> fecData) =>
       this.fecData = ObservableMap.of(fecData);
+
+  @action
+  fetchAllianceApply() async {
+    await http.get(
+      API.allianceApply,
+      params: {
+        'league_id': globalMainStore().allianceId,
+      },
+    );
+  }
+
+  @action
+  fetchAllianceStimulate() async {
+    await http.get(
+      API.allianceStimulate,
+      params: {
+        'league_id': globalMainStore().allianceId,
+      },
+    );
+  }
 }
