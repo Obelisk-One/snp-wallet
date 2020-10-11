@@ -11,8 +11,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:snp/common/common.dart';
 import 'package:snp/common/utils/oss_util.dart';
+import 'package:snp/main.dart';
 import 'package:snp/ui/store/main_store.dart';
 import 'package:snp/ui/widgets/image_selector_view.dart';
+import 'package:snp/ui/widgets/invite_code_dialog.dart';
 
 class InviteUserView extends StatelessWidget {
   final _controller = TextEditingController();
@@ -111,7 +113,14 @@ class InviteUserView extends StatelessWidget {
         },
         onSuccess: (data) {
           dismissLoading();
-          print(data);
+          showDialog(
+            context: rootKey.currentContext,
+            builder: (BuildContext context) => InviteCodeView(
+              code: data.data,
+              closed: () => pop(),
+            ),
+            barrierDismissible: true,
+          );
         },
         onError: (error) {
           dismissLoading();

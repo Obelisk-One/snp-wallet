@@ -42,9 +42,13 @@ class WebImage extends StatelessWidget {
         maxWidth: width,
       ),
       child: CachedNetworkImage(
+        height: height,
+        width: width,
         imageUrl: url + style,
         imageBuilder: (context, imageProvider) => Container(
           // height: sHeight(90),
+          height: height,
+          width: width,
           margin: margin,
           decoration: BoxDecoration(
             // shape: BoxShape.circle,
@@ -88,7 +92,8 @@ class WebImage extends StatelessWidget {
   }
 
   Widget _placeHolderView(child) => Container(
-        // height: sHeight(90),
+        height: height,
+        width: width,
         margin: margin,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(radius),

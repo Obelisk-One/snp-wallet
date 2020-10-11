@@ -15,7 +15,7 @@ class SnpIcon {
   static const IconData tab_news_on = const IconData(0xe62a, fontFamily: "SnpIcon");
   static const IconData tab_board = const IconData(0xe609, fontFamily: "SnpIcon");
   static const IconData tab_board_on = const IconData(0xe60a, fontFamily: "SnpIcon");
-  static const IconData tab_wallet = const IconData(0xe628, fontFamily: "SnpIcon");
+  static const IconData tab_wallet = const IconData(0xe647, fontFamily: "SnpIcon");
   static const IconData tab_wallet_on = const IconData(0xe629, fontFamily: "SnpIcon");
   static const IconData tab_mine = const IconData(0xe60b, fontFamily: "SnpIcon");
   static const IconData tab_mine_on = const IconData(0xe61f, fontFamily: "SnpIcon");
