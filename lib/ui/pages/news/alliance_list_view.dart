@@ -56,9 +56,12 @@ class AllianceListView extends StatelessWidget {
                 return AllianceCellView(
                   bean: bean,
                   selected: bean.id == _store.allianceId,
-                  onTap: () {
+                  onTap: () async {
                     if (_store.allianceId != bean.id) {
-                      _store.setAllianceId(bean.id);
+                      await afterLoading(
+                        _store.setAllianceId(bean.id),
+                        seconds: 0,
+                      );
                       _store.endDrawer();
                     }
                   },

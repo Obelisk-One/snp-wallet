@@ -15,7 +15,9 @@ import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
+import 'package:snp/apis.dart';
 import 'package:snp/common/base/base_config.dart';
+import 'package:snp/common/utils/http_util.dart';
 import 'package:snp/main.dart';
 import 'package:snp/ui/pages/board/board_home_page.dart';
 import 'package:snp/ui/pages/mine/mine_page.dart';
@@ -37,6 +39,9 @@ abstract class MainStoreMobx with Store {
 
   @observable
   int allianceId = -1;
+
+  @observable
+  bool isInAlliance = false;
 
   // @computed
   // int get selectedAllianceId {
@@ -88,9 +93,24 @@ abstract class MainStoreMobx with Store {
   }
 
   @action
-  setAllianceId(int id) {
+  setAllianceId(int id) async {
     SpUtil.putInt(Config.sp_key_alliance_id, id);
-    allianceId = id;
+    this.allianceId = id;
+    await checkIsInAlliance();
+  }
+
+  @action
+  checkIsInAlliance() async {
+    final data = await http.get(
+      API.isInAlliance,
+      params: {
+        'league_id': this.allianceId,
+      },
+    );
+    if (data.error)
+      this.isInAlliance = false;
+    else
+      this.isInAlliance = data.data.toString() == '1';
   }
 }
 

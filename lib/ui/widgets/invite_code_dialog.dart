@@ -7,6 +7,7 @@
  * @author          dt
 */
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:snp/common/common.dart';
 
 class InviteCodeView extends StatelessWidget {
@@ -35,15 +36,15 @@ class InviteCodeView extends StatelessWidget {
             children: [
               gap(height: 40),
               Text(
-                '请将邀请码发送给好友',
+                '请将一下邀请码发送给被邀请者',
                 style: Font.minorS,
               ),
               gap(height: 40),
-              Text(
-                '你的邀请码',
-                style: Font.normalS,
-              ),
-              gap(height: 10),
+              // Text(
+              //   '邀请码',
+              //   style: Font.normalS,
+              // ),
+              // gap(height: 10),
               Text(
                 code,
                 style: ts(
@@ -57,7 +58,13 @@ class InviteCodeView extends StatelessWidget {
                 fontSize: sFontSize(14),
                 width: sWidth(130),
                 height: sHeight(28),
-                onClick: () {},
+                onClick: () => Clipboard.setData(
+                  ClipboardData(
+                    text: code,
+                  ),
+                ).then(
+                  (value) => toast('复制成功'),
+                ),
               ),
               gap(height: 30),
             ],

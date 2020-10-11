@@ -74,13 +74,15 @@ class _NewsHomePageState extends BaseState<NewsHomePage>
           HottestNewListPage(),
         ],
       ),
-      floatingActionButton: Visibility(
-        // visible: globalUserStore().bean.,
-        child: FloatingActionButton(
-          onPressed: () => RouteUtil.showModelPage(
-            PostContentPage(replyUser: '狗剩'),
+      floatingActionButton: Observer(
+        builder: (_) => Visibility(
+          visible: globalMainStore().isInAlliance,
+          child: FloatingActionButton(
+            onPressed: () => RouteUtil.showModelPage(
+              PostContentPage(replyUser: '狗剩'),
+            ),
+            child: Icon(Icons.add),
           ),
-          child: Icon(Icons.add),
         ),
       ),
     );
@@ -95,6 +97,7 @@ class _NewsHomePageState extends BaseState<NewsHomePage>
       length: 2,
       initialIndex: 0,
     );
+    _mainStore.checkIsInAlliance();
   }
 
   @override

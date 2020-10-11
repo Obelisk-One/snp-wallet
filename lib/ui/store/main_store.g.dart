@@ -39,6 +39,21 @@ mixin _$MainStore on MainStoreMobx, Store {
     });
   }
 
+  final _$isInAllianceAtom = Atom(name: 'MainStoreMobx.isInAlliance');
+
+  @override
+  bool get isInAlliance {
+    _$isInAllianceAtom.reportRead();
+    return super.isInAlliance;
+  }
+
+  @override
+  set isInAlliance(bool value) {
+    _$isInAllianceAtom.reportWrite(value, super.isInAlliance, () {
+      super.isInAlliance = value;
+    });
+  }
+
   final _$pagesAtom = Atom(name: 'MainStoreMobx.pages');
 
   @override
@@ -52,6 +67,21 @@ mixin _$MainStore on MainStoreMobx, Store {
     _$pagesAtom.reportWrite(value, super.pages, () {
       super.pages = value;
     });
+  }
+
+  final _$setAllianceIdAsyncAction = AsyncAction('MainStoreMobx.setAllianceId');
+
+  @override
+  Future setAllianceId(int id) {
+    return _$setAllianceIdAsyncAction.run(() => super.setAllianceId(id));
+  }
+
+  final _$checkIsInAllianceAsyncAction =
+      AsyncAction('MainStoreMobx.checkIsInAlliance');
+
+  @override
+  Future checkIsInAlliance() {
+    return _$checkIsInAllianceAsyncAction.run(() => super.checkIsInAlliance());
   }
 
   final _$MainStoreMobxActionController =
@@ -91,21 +121,11 @@ mixin _$MainStore on MainStoreMobx, Store {
   }
 
   @override
-  dynamic setAllianceId(int id) {
-    final _$actionInfo = _$MainStoreMobxActionController.startAction(
-        name: 'MainStoreMobx.setAllianceId');
-    try {
-      return super.setAllianceId(id);
-    } finally {
-      _$MainStoreMobxActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 tabIndex: ${tabIndex},
 allianceId: ${allianceId},
+isInAlliance: ${isInAlliance},
 pages: ${pages}
     ''';
   }

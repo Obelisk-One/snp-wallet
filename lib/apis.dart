@@ -21,6 +21,7 @@ class API {
   static final String getInviteCode = 'api/v1/league/invite';
   static final String allianceBrief = 'api/v1/league/bulletin';
   static final String allianceMineMessage = 'api/v1/league/mine';
+  static final String isInAlliance = 'api/v1/league/verify/join';
 
   static final String wallet = 'api/v1/wallet/list';
 }

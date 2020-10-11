@@ -113,13 +113,14 @@ class InviteUserView extends StatelessWidget {
         },
         onSuccess: (data) {
           dismissLoading();
+          toast('提交成功,请将邀请码发送给被邀请者');
           showDialog(
             context: rootKey.currentContext,
             builder: (BuildContext context) => InviteCodeView(
               code: data.data,
               closed: () => pop(),
             ),
-            barrierDismissible: true,
+            barrierDismissible: false,
           );
         },
         onError: (error) {
