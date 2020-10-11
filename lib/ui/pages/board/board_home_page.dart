@@ -17,9 +17,12 @@ import 'package:snp/ui/base/base_stateful.dart';
 import 'package:snp/ui/pages/board/invite_user_view.dart';
 import 'package:snp/ui/pages/board/store/board_home.dart';
 import 'package:snp/ui/store/main_store.dart';
+import 'package:snp/ui/widgets/alliance_apply_cell_view.dart';
+import 'package:snp/ui/widgets/avatar_view.dart';
 import 'package:snp/ui/widgets/circle_loader_view.dart';
 import 'package:snp/ui/widgets/snp_list_view.dart';
 import 'package:snp/ui/widgets/tab_view.dart';
+import 'package:snp/ui/widgets/web_image_view.dart';
 
 class BoardHomePage extends StatefulWidget {
   @override
@@ -139,31 +142,25 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
           ),
           SliverOpacity(
             opacity: _showFirst ? 1 : 0,
-            // sliver: SliverToBoxAdapter(
-            //   child: SListView(
-            //     apiPath: API.allianceApply,
-            //     params: {
-            //       'league_id': globalMainStore().allianceId,
-            //     },
-            //     itemView: (index, item) {
-            //       AllianceApplyBean _bean = AllianceApplyBean.fromJson(item);
-            //       return Container(
-            //         child: Text(_bean.message),
-            //       );
-            //     },
-            //   ),
-            // ),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Container(
-                    height: 50,
-                    alignment: Alignment.center,
-                    color: Colors.lightBlue[100 * (index % 9)],
-                    child: Text('list item $index'),
-                  );
-                },
-                childCount: _showFirst ? 10 : 0,
+            sliver: Observer(
+              builder: (_) => SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    if (index < _store.applyList.length)
+                      return AllianceApplyCell(_store.applyList[index]);
+                    else
+                      return Container(
+                        height: sHeight(50),
+                        child: Center(
+                          child: Text(
+                            '-----我是有底线的-----',
+                            style: Font.hintS,
+                          ),
+                        ),
+                      );
+                  },
+                  childCount: _showFirst ? _store.applyList.length + 1 : 0,
+                ),
               ),
             ),
           ),

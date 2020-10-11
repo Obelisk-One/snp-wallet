@@ -15,6 +15,7 @@ import 'dart:ui';
 
 import 'package:mobx/mobx.dart';
 import 'package:snp/apis.dart';
+import 'package:snp/beans/alliance_apply_bean.dart';
 import 'package:snp/common/base/base_color.dart';
 import 'package:snp/common/utils/http_util.dart';
 import 'package:snp/ui/store/main_store.dart';
@@ -81,6 +82,9 @@ abstract class BoardHomeMobx with Store {
     },
   });
 
+  @observable
+  ObservableList applyList = ObservableList();
+
   @action
   void setBrightness(Brightness brightness) => this.brightness = brightness;
 
@@ -102,16 +106,23 @@ abstract class BoardHomeMobx with Store {
       params: {
         'league_id': globalMainStore().allianceId,
       },
+      onSuccess: (data) {
+        this.applyList =
+            ObservableList.of(getAllianceApplyBeanList(data.data['data']));
+      },
+      onError: (error) {
+        this.applyList.clear();
+      },
     );
   }
 
   @action
   fetchAllianceStimulate() async {
-    await http.get(
-      API.allianceStimulate,
-      params: {
-        'league_id': globalMainStore().allianceId,
-      },
-    );
+    // await http.get(
+    //   API.allianceStimulate,
+    //   params: {
+    //     'league_id': globalMainStore().allianceId,
+    //   },
+    // );
   }
 }

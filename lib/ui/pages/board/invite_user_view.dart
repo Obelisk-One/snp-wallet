@@ -75,7 +75,7 @@ class InviteUserView extends StatelessWidget {
             gap(height: 30),
             ImageSelectorView(
               store: _store,
-              maxImage: 3,
+              maxImage: 1,
             ),
           ],
         ),

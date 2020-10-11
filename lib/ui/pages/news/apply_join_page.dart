@@ -195,7 +195,7 @@ class _ApplyJoinPageState extends BaseState<ApplyJoinPage> {
       dismissLoading();
       sState(() {
         _showBody = true;
-        _needCode = data.data.toString() != '2';
+        _needCode = data.data < 2;
       });
     }, onError: (error) {
       dismissLoading();
