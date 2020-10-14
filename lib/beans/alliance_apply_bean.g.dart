@@ -42,9 +42,10 @@ Extend _$ExtendFromJson(Map<String, dynamic> json) {
     json['invite'] == null
         ? null
         : Invite.fromJson(json['invite'] as Map<String, dynamic>),
-    json['league'] == null
-        ? null
-        : League.fromJson(json['league'] as Map<String, dynamic>),
+    (json['league'] as List)
+        ?.map((e) =>
+            e == null ? null : League.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
     json['type'] as String,
   );
 }

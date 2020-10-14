@@ -17,6 +17,7 @@ import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:snp/apis.dart';
 import 'package:snp/common/base/base_config.dart';
+import 'package:snp/common/utils/event_bus_util.dart';
 import 'package:snp/common/utils/http_util.dart';
 import 'package:snp/main.dart';
 import 'package:snp/ui/pages/board/board_home_page.dart';
@@ -97,6 +98,7 @@ abstract class MainStoreMobx with Store {
     SpUtil.putInt(Config.sp_key_alliance_id, id);
     this.allianceId = id;
     await checkIsInAlliance();
+    bus.emit(Config.event_bus_switch_alliance);
   }
 
   @action

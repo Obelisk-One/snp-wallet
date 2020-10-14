@@ -75,7 +75,7 @@ class Extend extends Object {
   Invite invite;
 
   @JsonKey(name: 'league')
-  League league;
+  List<League> league;
 
   @JsonKey(name: 'type')
   String type;
@@ -123,6 +123,13 @@ class Invite extends Object {
   Map<String, dynamic> toJson() => _$InviteToJson(this);
 }
 
+List<League> getLeagueList(List<dynamic> list){
+  List<League> result = [];
+  list.forEach((item){
+    result.add(League.fromJson(item));
+  });
+  return result;
+}
 @JsonSerializable()
 class League extends Object {
   @JsonKey(name: 'league_id')

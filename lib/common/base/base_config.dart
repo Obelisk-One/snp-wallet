@@ -35,7 +35,8 @@ class Config {
   static const String oss_remote_dir_alliance = 'alliance/';
   static const String oss_remote_dir_content = 'content/';
   static const String oss_remote_dir_apply = 'apply/';
+  static const String oss_style_org = '_org';
+  static const String oss_style_thumb = '_thumb';
 
-  static const String oss_style_org='_org';
-  static const String oss_style_thumb='_thumb';
+  static const String event_bus_switch_alliance = 'switch_alliance';
 }

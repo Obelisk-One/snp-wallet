@@ -69,6 +69,21 @@ mixin _$BoardHomeStore on BoardHomeMobx, Store {
     });
   }
 
+  final _$applyListAtom = Atom(name: 'BoardHomeMobx.applyList');
+
+  @override
+  ObservableList<dynamic> get applyList {
+    _$applyListAtom.reportRead();
+    return super.applyList;
+  }
+
+  @override
+  set applyList(ObservableList<dynamic> value) {
+    _$applyListAtom.reportWrite(value, super.applyList, () {
+      super.applyList = value;
+    });
+  }
+
   final _$fetchAllianceApplyAsyncAction =
       AsyncAction('BoardHomeMobx.fetchAllianceApply');
 
@@ -140,7 +155,8 @@ mixin _$BoardHomeStore on BoardHomeMobx, Store {
 brightness: ${brightness},
 titleOpacity: ${titleOpacity},
 fameData: ${fameData},
-fecData: ${fecData}
+fecData: ${fecData},
+applyList: ${applyList}
     ''';
   }
 }

@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:snp/beans/alliance_apply_bean.dart';
 import 'package:snp/common/common.dart';
+import 'package:snp/common/utils/event_bus_util.dart';
 import 'package:snp/ui/base/base_stateful.dart';
 import 'package:snp/ui/pages/board/invite_user_view.dart';
 import 'package:snp/ui/pages/board/store/board_home.dart';
@@ -120,22 +121,28 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                     ],
                   ),
                 ),
-                FlatButton(
-                  child: Row(
-                    children: [
-                      Icon(
-                        SnpIcon.invite,
-                        size: 17,
-                        color: CColor.mainColor,
+                Observer(
+                  builder: (_) => Visibility(
+                    visible: globalMainStore().isInAlliance,
+                    child: FlatButton(
+                      child: Row(
+                        children: [
+                          Icon(
+                            SnpIcon.invite,
+                            size: 17,
+                            color: CColor.mainColor,
+                          ),
+                          Text(
+                            ' 引入新成员',
+                            style: Font.lightS,
+                          ),
+                        ],
                       ),
-                      Text(
-                        ' 引入新成员',
-                        style: Font.lightS,
-                      ),
-                    ],
+                      color: Colors.transparent,
+                      onPressed: () =>
+                          RouteUtil.showModelPage(InviteUserView()),
+                    ),
                   ),
-                  color: Colors.transparent,
-                  onPressed: () => RouteUtil.showModelPage(InviteUserView()),
                 ),
               ],
             ),
@@ -425,11 +432,24 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
         _store.setTitleOpacity(opacity);
       });
     _refreshController = EasyRefreshController();
+    bus.on(
+      Config.event_bus_switch_alliance,
+          (arg) => _refreshController.callRefresh(),
+    );
   }
 
   @override
   void onResume() {
     _refreshController.callRefresh();
     super.onResume();
+  }
+
+  @override
+  void dispose() {
+    bus.off(Config.event_bus_switch_alliance);
+    _tabController = null;
+    _scrollController = null;
+    _refreshController = null;
+    super.dispose();
   }
 }
