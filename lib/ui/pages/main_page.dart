@@ -28,17 +28,16 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends BaseState<MainPage> {
 //  List<Widget> _pages;
   int _lastClickTime = 0;
-  MainStore _mainStore;
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Scaffold(
-        key: _mainStore.scaffoldKey,
+        key: globalMainStore.scaffoldKey,
         body: Observer(
           builder: (_) => IndexedStack(
-            index: _mainStore.tabIndex,
-            children: _mainStore.pages,
+            index: globalMainStore.tabIndex,
+            children: globalMainStore.pages,
           ),
         ),
         drawer: Container(
@@ -49,18 +48,6 @@ class _MainPageState extends BaseState<MainPage> {
       ),
       onWillPop: () => _doubleExit(),
     );
-  }
-
-  @override
-  void initState() {
-    _mainStore = globalMainStore();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _mainStore = null;
-    super.dispose();
   }
 
   @override
@@ -82,8 +69,8 @@ class _MainPageState extends BaseState<MainPage> {
         builder: (_) => BottomNavigationBar(
           elevation: 8.0,
           backgroundColor: CColor.bgColor,
-          currentIndex: _mainStore.tabIndex,
-          onTap: (index) => _mainStore.switchTo(index),
+          currentIndex: globalMainStore.tabIndex,
+          onTap: (index) => globalMainStore.switchTo(index),
           type: BottomNavigationBarType.fixed,
           //fixedColor: Colors.white,
           items: [

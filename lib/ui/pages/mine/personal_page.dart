@@ -28,7 +28,6 @@ class PersonalPage extends StatelessWidget {
   List<String> _items = ['头像', '昵称', '性别', '所在地', '个人简介'];
   List<String> _genders = ['未明确', '男', '女'];
   int _selectedGenderIndex = 0;
-  final _store = globalUserStore();
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +60,7 @@ class PersonalPage extends StatelessWidget {
                 child: Stack(
                   children: [
                     Observer(
-                      builder: (_) => Avatar(_store.bean.avatar),
+                      builder: (_) => Avatar(globalUserStore.bean.avatar),
                     ),
                     Positioned(
                       bottom: 0,
@@ -91,9 +90,9 @@ class PersonalPage extends StatelessWidget {
               margin: sInsetsAll(10),
               child: Observer(
                 builder: (_) => Text(
-                  ObjectUtil.isEmptyString(_store.bean.username)
+                  ObjectUtil.isEmptyString(globalUserStore.bean.username)
                       ? ''
-                      : '@${_store.bean.username}',
+                      : '@${globalUserStore.bean.username}',
                   style: Font.minorH,
                 ),
               ),
@@ -119,23 +118,23 @@ class PersonalPage extends StatelessWidget {
                   String _subtitle = '';
                   switch (index) {
                     case 1:
-                      _subtitle = _store.bean.nickname;
+                      _subtitle = globalUserStore.bean.nickname;
                       break;
                     case 2:
-                      _subtitle = _store.bean.gender == 0
+                      _subtitle = globalUserStore.bean.gender == 0
                           ? '女'
-                          : (_store.bean.gender == 1 ? '男' : '未明确');
+                          : (globalUserStore.bean.gender == 1 ? '男' : '未明确');
                       _selectedGenderIndex = _genders.indexOf(_subtitle);
                       break;
                     case 3:
-                      _subtitle = ObjectUtil.isEmptyString(_store.bean.areaName)
+                      _subtitle = ObjectUtil.isEmptyString(globalUserStore.bean.areaName)
                           ? '未设置'
-                          : _store.bean.areaName;
+                          : globalUserStore.bean.areaName;
                       break;
                     case 4:
-                      _subtitle = ObjectUtil.isEmptyString(_store.bean.disc)
+                      _subtitle = ObjectUtil.isEmptyString(globalUserStore.bean.disc)
                           ? '暂无简介'
-                          : _store.bean.disc;
+                          : globalUserStore.bean.disc;
                       break;
                   }
                   return Text(
@@ -170,9 +169,9 @@ class PersonalPage extends StatelessWidget {
               context: context,
               height: 300,
               barrierOpacity: .3,
-              locationCode: ObjectUtil.isEmptyString(_store.bean.areaCode)
+              locationCode: ObjectUtil.isEmptyString(globalUserStore.bean.areaCode)
                   ? '110000'
-                  : _store.bean.areaCode,
+                  : globalUserStore.bean.areaCode,
             ).then(_setArea);
             break;
           case 4:
@@ -285,7 +284,7 @@ class PersonalPage extends StatelessWidget {
     int _gender = _selectedGenderIndex == 0
         ? 2
         : (_selectedGenderIndex == 2 ? 0 : _selectedGenderIndex);
-    bool result = await _store.setGender(_gender);
+    bool result = await globalUserStore.setGender(_gender);
 
     if (result) {
       toast('设置成功');
@@ -301,7 +300,7 @@ class PersonalPage extends StatelessWidget {
           '${res.provinceName} ${res.cityName} ${res.areaName}'.trimRight();
       String _value = '$_areaName|${res.areaId}';
 
-      bool result = await _store.setArea(_value);
+      bool result = await globalUserStore.setArea(_value);
 
       if (result)
         toast('设置成功');
@@ -311,7 +310,7 @@ class PersonalPage extends StatelessWidget {
   }
 
   _setAvatar(String key) async {
-    bool result = await _store.setAvatar(key);
+    bool result = await globalUserStore.setAvatar(key);
 
     dismissLoading();
     if (result)

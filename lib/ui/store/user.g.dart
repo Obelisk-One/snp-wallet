@@ -80,6 +80,19 @@ mixin _$UserStore on UserMobx, Store {
     return _$fetchUserInfoAsyncAction.run(() => super.fetchUserInfo());
   }
 
+  final _$UserMobxActionController = ActionController(name: 'UserMobx');
+
+  @override
+  dynamic logout() {
+    final _$actionInfo =
+        _$UserMobxActionController.startAction(name: 'UserMobx.logout');
+    try {
+      return super.logout();
+    } finally {
+      _$UserMobxActionController.endAction(_$actionInfo);
+    }
+  }
+
   @override
   String toString() {
     return '''

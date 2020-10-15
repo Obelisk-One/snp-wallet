@@ -104,12 +104,12 @@ class _NamesSettingPageState extends BaseState<NamesSettingPage> {
       toast('请输入昵称');
       return;
     }
-    UserStore _userStore = globalUserStore();
-    await _userStore.doRegister(
+    await globalUserStore.doRegister(
       _usernameController.text,
       _nicknameController.text,
     );
-    if (_userStore.password.isNotEmpty) push(RegisterPage(_userStore.password));
+    if (globalUserStore.password.isNotEmpty)
+      push(RegisterPage(globalUserStore.password));
   }
 
   @override

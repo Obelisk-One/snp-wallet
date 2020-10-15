@@ -28,12 +28,12 @@ class AllianceBriefPage extends StatelessWidget {
         views: <Widget>[
           SListView(
             apiPath: API.allianceBrief,
-            params: {'league_id': globalMainStore().allianceId},
+            params: {'league_id': globalMainStore.allianceId},
             itemView: (index, item) => _renderBriefItem(item),
           ),
           SListView(
             apiPath: API.allianceMineMessage,
-            params: {'league_id': globalMainStore().allianceId},
+            params: {'league_id': globalMainStore.allianceId},
             itemView: (index, item) => _renderBriefItem(item),
           ),
         ],

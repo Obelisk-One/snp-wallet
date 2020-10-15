@@ -84,13 +84,73 @@ mixin _$BoardHomeStore on BoardHomeMobx, Store {
     });
   }
 
+  final _$pageAtom = Atom(name: 'BoardHomeMobx.page');
+
+  @override
+  int get page {
+    _$pageAtom.reportRead();
+    return super.page;
+  }
+
+  @override
+  set page(int value) {
+    _$pageAtom.reportWrite(value, super.page, () {
+      super.page = value;
+    });
+  }
+
+  final _$isLoadingAtom = Atom(name: 'BoardHomeMobx.isLoading');
+
+  @override
+  bool get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
+  }
+
+  @override
+  set isLoading(bool value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
+  }
+
+  final _$noMoreAtom = Atom(name: 'BoardHomeMobx.noMore');
+
+  @override
+  bool get noMore {
+    _$noMoreAtom.reportRead();
+    return super.noMore;
+  }
+
+  @override
+  set noMore(bool value) {
+    _$noMoreAtom.reportWrite(value, super.noMore, () {
+      super.noMore = value;
+    });
+  }
+
+  final _$isErrorAtom = Atom(name: 'BoardHomeMobx.isError');
+
+  @override
+  bool get isError {
+    _$isErrorAtom.reportRead();
+    return super.isError;
+  }
+
+  @override
+  set isError(bool value) {
+    _$isErrorAtom.reportWrite(value, super.isError, () {
+      super.isError = value;
+    });
+  }
+
   final _$fetchAllianceApplyAsyncAction =
       AsyncAction('BoardHomeMobx.fetchAllianceApply');
 
   @override
-  Future fetchAllianceApply() {
+  Future fetchAllianceApply(bool refresh) {
     return _$fetchAllianceApplyAsyncAction
-        .run(() => super.fetchAllianceApply());
+        .run(() => super.fetchAllianceApply(refresh));
   }
 
   final _$fetchAllianceStimulateAsyncAction =
@@ -156,7 +216,11 @@ brightness: ${brightness},
 titleOpacity: ${titleOpacity},
 fameData: ${fameData},
 fecData: ${fecData},
-applyList: ${applyList}
+applyList: ${applyList},
+page: ${page},
+isLoading: ${isLoading},
+noMore: ${noMore},
+isError: ${isError}
     ''';
   }
 }

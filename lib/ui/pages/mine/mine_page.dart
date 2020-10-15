@@ -40,7 +40,6 @@ class _MinePageState extends BaseState<MinePage> {
   ScrollController _scrollController;
   EasyRefreshController _refreshController;
   double _headerHeight = 0;
-  UserStore _userStore;
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +165,7 @@ class _MinePageState extends BaseState<MinePage> {
           ),
         ],
         onRefresh: () async {
-          await _userStore.fetchUserInfo();
+          await globalUserStore.fetchUserInfo();
         },
         onLoad: () async {
           await Future.delayed(Duration(seconds: 2), () {});
@@ -177,7 +176,7 @@ class _MinePageState extends BaseState<MinePage> {
 
   _renderPersonalCard() => Observer(
         builder: (_) => GestureDetector(
-          onTap: () => _userStore.bean == null ? null : push(PersonalPage()),
+          onTap: () => globalUserStore.bean == null ? null : push(PersonalPage()),
           child: Container(
             margin: sInsetsLTRB(15, 0, 15, 10),
             padding: sInsetsAll(10),
@@ -193,7 +192,7 @@ class _MinePageState extends BaseState<MinePage> {
                 ),
               ],
             ),
-            child: _userStore.bean == null
+            child: globalUserStore.bean == null
                 ? Column(
                     children: [
                       Padding(
@@ -224,7 +223,7 @@ class _MinePageState extends BaseState<MinePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Avatar(
-                        _userStore.bean.avatar,
+                        globalUserStore.bean.avatar,
                         size: 50,
                       ),
                       gap(width: 10),
@@ -240,14 +239,14 @@ class _MinePageState extends BaseState<MinePage> {
                                   text: TextSpan(
                                     children: <InlineSpan>[
                                       TextSpan(
-                                        text: '${_userStore.bean.nickname} ',
+                                        text: '${globalUserStore.bean.nickname} ',
                                         style: Font.normal,
                                       ),
                                       TextSpan(
                                         text: ObjectUtil.isEmptyString(
-                                                _userStore.bean.username)
+                                            globalUserStore.bean.username)
                                             ? ''
-                                            : '@${_userStore.bean.username}',
+                                            : '@${globalUserStore.bean.username}',
                                         style: Font.minor,
                                       ),
                                     ],
@@ -255,7 +254,7 @@ class _MinePageState extends BaseState<MinePage> {
                                 ),
                                 Visibility(
                                   visible: !ObjectUtil.isEmptyString(
-                                      _userStore.bean.areaName),
+                                      globalUserStore.bean.areaName),
                                   child: Row(
                                     children: [
                                       Icon(
@@ -264,7 +263,7 @@ class _MinePageState extends BaseState<MinePage> {
                                         size: 14,
                                       ),
                                       Text(
-                                        _userStore.bean.areaName,
+                                        globalUserStore.bean.areaName,
                                         style: Font.hintXS,
                                       ),
                                     ],
@@ -274,9 +273,9 @@ class _MinePageState extends BaseState<MinePage> {
                             ),
                             gap(height: 5),
                             Text(
-                              ObjectUtil.isEmptyString(_userStore.bean.disc)
+                              ObjectUtil.isEmptyString(globalUserStore.bean.disc)
                                   ? '暂无简介'
-                                  : _userStore.bean.disc,
+                                  : globalUserStore.bean.disc,
                               style: Font.minorS,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -329,7 +328,6 @@ class _MinePageState extends BaseState<MinePage> {
   @override
   void initState() {
     super.initState();
-    _userStore = globalUserStore();
     _scrollController = ScrollController()
       ..addListener(() {
         if (_scrollController.offset >= 480)

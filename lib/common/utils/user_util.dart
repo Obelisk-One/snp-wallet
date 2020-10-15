@@ -145,4 +145,9 @@ class UserUtil {
         onSuccess: onSuccess,
         onError: onError,
       );
+
+  logout(){
+    user.token='';
+    user.privateKey='';
+  }
 }

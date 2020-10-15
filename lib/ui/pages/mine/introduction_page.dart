@@ -23,7 +23,6 @@ class IntroductionPage extends StatefulWidget {
 }
 
 class _IntroductionPageState extends BaseState<IntroductionPage> {
-  UserStore _store;
   TextEditingController _controller;
   bool _canSubmit = false;
 
@@ -101,7 +100,7 @@ class _IntroductionPageState extends BaseState<IntroductionPage> {
                 ),
               ),
               onChanged: (text) => sState(
-                    () => _canSubmit = _store.bean.disc != text &&
+                    () => _canSubmit = globalUserStore.bean.disc != text &&
                     !ObjectUtil.isEmptyString(text),
               ),
             ),
@@ -114,7 +113,7 @@ class _IntroductionPageState extends BaseState<IntroductionPage> {
   _setDescription() {
     if (!_canSubmit) return;
     // bool result=_store.setDescription(_controller.text);
-    afterLoading(_store.setDescription(_controller.text)).then((value) {
+    afterLoading(globalUserStore.setDescription(_controller.text)).then((value) {
       if (value) {
         toast('设置成功');
         pop();
@@ -125,13 +124,11 @@ class _IntroductionPageState extends BaseState<IntroductionPage> {
 
   @override
   void initState() {
-    _store = globalUserStore();
-    _controller = TextEditingController(text: _store.bean.disc);
+    _controller = TextEditingController(text: globalUserStore.bean.disc);
     super.initState();
   }
   @override
   void dispose() {
-    _store = null;
     _controller = null;
     super.dispose();
   }

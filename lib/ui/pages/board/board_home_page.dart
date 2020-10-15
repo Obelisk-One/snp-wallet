@@ -123,7 +123,7 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                 ),
                 Observer(
                   builder: (_) => Visibility(
-                    visible: globalMainStore().isInAlliance,
+                    visible: globalMainStore.isInAlliance,
                     child: FlatButton(
                       child: Row(
                         children: [
@@ -147,8 +147,8 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
               ],
             ),
           ),
-          SliverOpacity(
-            opacity: _showFirst ? 1 : 0,
+          SliverVisibility(
+            visible: _showFirst,
             sliver: Observer(
               builder: (_) => SliverList(
                 delegate: SliverChildBuilderDelegate(
@@ -160,40 +160,46 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                         height: sHeight(50),
                         child: Center(
                           child: Text(
-                            '-----我是有底线的-----',
+                            _store.applyList.isEmpty
+                                ? '暂无数据'
+                                : _store.noMore
+                                    ? '-----我是有底线的-----'
+                                    : _store.isError ? '获取数据失败,请重试' : '',
                             style: Font.hintS,
                           ),
                         ),
                       );
                   },
-                  childCount: _showFirst ? _store.applyList.length + 1 : 0,
+                  childCount: _store.applyList.length + 1,
                 ),
               ),
             ),
           ),
-          SliverOpacity(
-            opacity: _showFirst ? 0 : 1,
+          SliverVisibility(
+            visible: !_showFirst,
             sliver: SliverFixedExtentList(
               itemExtent: _showFirst ? 0 : 30,
-              delegate:
-                  SliverChildBuilderDelegate((BuildContext context, int index) {
-                return Container(
-                  alignment: Alignment.center,
-                  color: Colors.lightGreen[100 * (index % 9)],
-                  child: Text('list item $index'),
-                );
-              }, childCount: 20),
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return Container(
+                    alignment: Alignment.center,
+                    color: Colors.lightGreen[100 * (index % 9)],
+                    child: Text('list item $index'),
+                  );
+                },
+                childCount: 20,
+              ),
             ),
           ),
         ],
         onRefresh: () async {
           // await Future.delayed(Duration(seconds: 2), () {});
-          await _store.fetchAllianceApply();
+          await _store.fetchAllianceApply(true);
           await _store.fetchAllianceStimulate();
         },
-        onLoad: _showFirst
+        onLoad: _showFirst && !_store.noMore
             ? () async {
-                await Future.delayed(Duration(seconds: 2), () {});
+                await _store.fetchAllianceApply(false);
               }
             : null,
       ),
@@ -434,7 +440,7 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
     _refreshController = EasyRefreshController();
     bus.on(
       Config.event_bus_switch_alliance,
-          (arg) => _refreshController.callRefresh(),
+      (arg) => _refreshController.callRefresh(),
     );
   }
 

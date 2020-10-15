@@ -30,7 +30,6 @@ class NicknamePage extends StatefulWidget {
 
 class _NicknamePageState extends BaseState<NicknamePage> {
   TextEditingController _controller;
-  UserStore _store;
   bool _didEdit = false;
   bool _didInput = false;
 
@@ -121,7 +120,7 @@ class _NicknamePageState extends BaseState<NicknamePage> {
               ),
               onChanged: (text) {
                 sState(() {
-                  _didEdit = text != _store.bean.nickname;
+                  _didEdit = text != globalUserStore.bean.nickname;
                   _didInput = !ObjectUtil.isEmptyString(text);
                 });
               },
@@ -147,7 +146,7 @@ class _NicknamePageState extends BaseState<NicknamePage> {
       toast('请输入昵称');
       return;
     }
-    afterLoading(_store.setNickname(_controller.text)).then((value) {
+    afterLoading(globalUserStore.setNickname(_controller.text)).then((value) {
       if (value) {
         toast('昵称设置成功');
         if (widget.asModel)
@@ -161,11 +160,10 @@ class _NicknamePageState extends BaseState<NicknamePage> {
 
   @override
   void initState() {
-    _store = globalUserStore();
-    _controller =
-        TextEditingController(text: widget.asModel ? _store.bean.nickname : '');
+    _controller = TextEditingController(
+        text: widget.asModel ? globalUserStore.bean.nickname : '');
     _didInput = widget.asModel
-        ? !ObjectUtil.isEmptyString(_store.bean.nickname)
+        ? !ObjectUtil.isEmptyString(globalUserStore.bean.nickname)
         : false;
     super.initState();
   }

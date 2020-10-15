@@ -116,6 +116,5 @@ abstract class MainStoreMobx with Store {
   }
 }
 
-MainStore globalMainStore() {
-  return Provider.of<MainStore>(rootKey.currentContext, listen: false);
-}
+MainStore get globalMainStore =>
+    Provider.of<MainStore>(rootKey.currentContext, listen: false);

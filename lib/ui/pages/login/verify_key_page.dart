@@ -91,7 +91,7 @@ class VerifyKeyPage extends StatelessWidget {
 
   _doVerify(BuildContext context) {
     showLoading();
-    globalUserStore().verifyWithWords(
+    globalUserStore.verifyWithWords(
       words: _controller.text,
       onSuccess: (data) {
         dismissLoading();

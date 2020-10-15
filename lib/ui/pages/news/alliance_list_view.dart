@@ -52,17 +52,16 @@ class AllianceListView extends StatelessWidget {
               apiPath: API.allianceList,
               itemView: (index, item) {
                 AllianceBean bean = AllianceBean.fromJson(item);
-                MainStore _store = globalMainStore();
                 return AllianceCellView(
                   bean: bean,
-                  selected: bean.id == _store.allianceId,
+                  selected: bean.id == globalMainStore.allianceId,
                   onTap: () async {
-                    if (_store.allianceId != bean.id) {
+                    if (globalMainStore.allianceId != bean.id) {
                       await afterLoading(
-                        _store.setAllianceId(bean.id),
+                        globalMainStore.setAllianceId(bean.id),
                         seconds: 0,
                       );
-                      _store.endDrawer();
+                      globalMainStore.endDrawer();
                     }
                   },
                 );

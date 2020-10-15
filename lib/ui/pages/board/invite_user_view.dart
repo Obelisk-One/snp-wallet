@@ -105,7 +105,7 @@ class InviteUserView extends StatelessWidget {
       http.post(
         API.getInviteCode,
         params: {
-          'league_id': globalMainStore().allianceId,
+          'league_id': globalMainStore.allianceId,
           'message': _controller.text,
           'images': _store.keys,
         },

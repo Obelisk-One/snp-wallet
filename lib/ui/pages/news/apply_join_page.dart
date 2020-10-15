@@ -155,7 +155,7 @@ class _ApplyJoinPageState extends BaseState<ApplyJoinPage> {
       http.post(
         API.applyJoinToAlliance,
         params: {
-          'league_id': globalMainStore().allianceId,
+          'league_id': globalMainStore.allianceId,
           'code': _codeController.text,
           'message': _reasonController.text,
           'images': _store.keys,

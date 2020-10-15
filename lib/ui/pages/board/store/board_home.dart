@@ -17,6 +17,8 @@ import 'package:mobx/mobx.dart';
 import 'package:snp/apis.dart';
 import 'package:snp/beans/alliance_apply_bean.dart';
 import 'package:snp/common/base/base_color.dart';
+import 'package:snp/common/base/base_config.dart';
+import 'package:snp/common/common.dart';
 import 'package:snp/common/utils/http_util.dart';
 import 'package:snp/ui/store/main_store.dart';
 
@@ -85,6 +87,18 @@ abstract class BoardHomeMobx with Store {
   @observable
   ObservableList applyList = ObservableList();
 
+  @observable
+  int page = 1;
+
+  @observable
+  bool isLoading = false;
+
+  @observable
+  bool noMore = false;
+
+  @observable
+  bool isError = false;
+
   @action
   void setBrightness(Brightness brightness) => this.brightness = brightness;
 
@@ -100,20 +114,46 @@ abstract class BoardHomeMobx with Store {
       this.fecData = ObservableMap.of(fecData);
 
   @action
-  fetchAllianceApply() async {
-    await http.get(
+  fetchAllianceApply(bool refresh) async {
+    if (refresh)
+      this.page = 1;
+    else {
+      if (this.noMore) return;
+      this.page++;
+    }
+    this.isError = false;
+    this.isLoading = true;
+
+    var _onError = (error) {
+      this.isError = true;
+      if (refresh) this.applyList.clear();
+      toast(error.msg);
+    };
+    var response = await http.get(
       API.allianceApply,
-      params: {
-        'league_id': globalMainStore().allianceId,
-      },
-      onSuccess: (data) {
-        this.applyList =
-            ObservableList.of(getAllianceApplyBeanList(data.data['data']));
-      },
-      onError: (error) {
-        this.applyList.clear();
-      },
+      params: _initParams(),
+      onError: _onError,
     );
+
+    if ((response.code ?? 0) == 1) {
+      List _dataList = getAllianceApplyBeanList(response.data['data']);
+      if (refresh)
+        this.applyList = ObservableList.of(_dataList);
+      else
+        this.applyList.addAll(_dataList);
+      this.noMore = response.data['current_page'] >= response.data['last_page'];
+    } else {
+      _onError(response);
+    }
+    this.isLoading = false;
+  }
+
+  _initParams() {
+    Map<String, dynamic> _params = Map<String, dynamic>();
+    _params['league_id'] = globalMainStore.allianceId;
+    _params['page'] = this.page;
+    _params['size'] = Config.listPageSize;
+    return _params;
   }
 
   @action

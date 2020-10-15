@@ -167,4 +167,8 @@ abstract class ListViewMobx with Store {
       this.refreshError = true;
     }
   }
+
+  void clearController() {
+    this.controller = null;
+  }
 }

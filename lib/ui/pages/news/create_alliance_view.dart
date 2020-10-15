@@ -33,7 +33,6 @@ class _CreateAllianceViewState extends BaseState<CreateAllianceView> {
 
   List _selectedUsers = [];
   String _selectedImage;
-  MainStore _mainStore;
 
   @override
   Widget build(BuildContext context) {
@@ -270,7 +269,7 @@ class _CreateAllianceViewState extends BaseState<CreateAllianceView> {
         dismissLoading();
         toast('联盟创建成功!');
         RouteUtil.popToRoot(context);
-        _mainStore.openDrawer();
+        globalMainStore.openDrawer();
       },
       onError: (error) {
         print("============================");
@@ -284,7 +283,6 @@ class _CreateAllianceViewState extends BaseState<CreateAllianceView> {
 
   @override
   void initState() {
-    _mainStore = globalMainStore();
     super.initState();
   }
 
@@ -292,7 +290,6 @@ class _CreateAllianceViewState extends BaseState<CreateAllianceView> {
   void dispose() {
     _tokenController = null;
     _nameController = null;
-    _mainStore = null;
     super.dispose();
   }
 }

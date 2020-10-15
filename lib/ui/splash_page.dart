@@ -39,7 +39,7 @@ class SplashPage extends StatelessWidget {
     Timer(
       Duration(seconds: duration),
       () {
-        if (globalMainStore().allianceId != -1)
+        if (globalMainStore.allianceId != -1)
           RouteUtil.pushReplacement(MainPage(), context);
         else
           RouteUtil.pushReplacement(LoginPage(), context);

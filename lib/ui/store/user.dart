@@ -15,10 +15,12 @@ import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:snp/beans/user_bean.dart';
+import 'package:snp/common/common.dart';
 import 'package:snp/common/utils/http_util.dart';
 import 'package:snp/common/utils/ui_util.dart';
 import 'package:snp/common/utils/user_util.dart';
 import 'package:snp/main.dart';
+import 'package:snp/ui/pages/login/login_page.dart';
 
 part 'user.g.dart';
 
@@ -108,8 +110,17 @@ abstract class UserMobx with Store {
   setArea(value) async => setInfo('area', value);
 
   setDescription(value) async => setInfo('bio', value);
+
+  @action
+  logout() {
+    user.logout();
+    this.isLogin = user.isLogin;
+    this.password = '';
+    this.bean = null;
+
+    RouteUtil.pushAndRemoveUntil(LoginPage(), rootKey.currentContext);
+  }
 }
 
-UserStore globalUserStore() {
-  return Provider.of<UserStore>(rootKey.currentContext, listen: false);
-}
+UserStore get globalUserStore =>
+    Provider.of<UserStore>(rootKey.currentContext, listen: false);

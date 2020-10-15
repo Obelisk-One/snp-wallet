@@ -11,6 +11,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:snp/common/common.dart';
 import 'package:snp/common/utils/user_util.dart';
 import 'package:snp/ui/pages/mine/store/settings.dart';
+import 'package:snp/ui/store/user.dart';
 
 // ignore: must_be_immutable
 class SettingsPage extends StatelessWidget {
@@ -91,7 +92,7 @@ class SettingsPage extends StatelessWidget {
             afterLoading(null).then((value) => toast('msg'));
             break;
           case 4:
-            toast('客官,别走啊~');
+            globalUserStore.logout();
             break;
         }
       },

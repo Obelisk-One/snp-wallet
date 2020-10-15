@@ -31,7 +31,7 @@ class AllianceSelectPage extends StatelessWidget {
               bean: bean,
               showApply: false,
               onTap: () {
-                globalMainStore().setAllianceId(bean.id);
+                globalMainStore.setAllianceId(bean.id);
                 RouteUtil.pushAndRemoveUntil(MainPage(), context);
               },
             );

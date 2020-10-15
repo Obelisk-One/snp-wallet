@@ -26,7 +26,6 @@ class NewsHomePage extends StatefulWidget {
 
 class _NewsHomePageState extends BaseState<NewsHomePage>
     with TickerProviderStateMixin {
-  MainStore _mainStore;
   TabController _controller;
 
   @override
@@ -54,7 +53,7 @@ class _NewsHomePageState extends BaseState<NewsHomePage>
             size: sFontSize(20),
             color: CColor.iconColor,
           ),
-          onPressed: () => _mainStore.openDrawer(),
+          onPressed: () => globalMainStore.openDrawer(),
         ),
         actions: [
           IconButton(
@@ -76,7 +75,7 @@ class _NewsHomePageState extends BaseState<NewsHomePage>
       ),
       floatingActionButton: Observer(
         builder: (_) => Visibility(
-          visible: globalMainStore().isInAlliance,
+          visible: globalMainStore.isInAlliance,
           child: FloatingActionButton(
             onPressed: () => RouteUtil.showModelPage(
               PostContentPage(replyUser: '狗剩'),
@@ -91,19 +90,17 @@ class _NewsHomePageState extends BaseState<NewsHomePage>
   @override
   void initState() {
     super.initState();
-    _mainStore = globalMainStore();
     _controller = TabController(
       vsync: this,
       length: 2,
       initialIndex: 0,
     );
-    _mainStore.checkIsInAlliance();
+    globalMainStore.checkIsInAlliance();
   }
 
   @override
   void dispose() {
     _controller = null;
-    _mainStore = null;
     super.dispose();
   }
 

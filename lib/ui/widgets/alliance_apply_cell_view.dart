@@ -137,42 +137,7 @@ class AllianceApplyCell extends StatelessWidget {
                         ],
                       ),
                       gap(height: 10),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: LinearPercentIndicator(
-                              lineHeight: 20.0,
-                              percent: bean.prestige / bean.totalPrestige,
-                              linearStrokeCap: LinearStrokeCap.roundAll,
-                              progressColor: CColor.mainColor,
-                              backgroundColor: CColor.bgPartColor,
-                              center: Text(
-                                '+${bean.state == 1 ? (bean.prestige / bean.totalPrestige).toStringAsFixed(2) + '%' : bean.prestige}',
-                                style: ts(
-                                  c: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                          gap(width: 5),
-                          if (bean.state == 1)
-                            Text('已通过')
-                          else
-                            Observer(
-                              builder: (_) => Visibility(
-                                visible: globalMainStore().isInAlliance,
-                                child: GestureDetector(
-                                  onTap: () {},
-                                  child: Icon(
-                                    SnpIcon.vote,
-                                    size: 20,
-                                    color: CColor.iconColor,
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
+                      _progress,
                     ],
                   ),
                 )
@@ -235,42 +200,7 @@ class AllianceApplyCell extends StatelessWidget {
                               );
                             }).toList(),
                           ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: LinearPercentIndicator(
-                                  lineHeight: 20.0,
-                                  percent: bean.prestige / bean.totalPrestige,
-                                  linearStrokeCap: LinearStrokeCap.roundAll,
-                                  progressColor: CColor.mainColor,
-                                  backgroundColor: CColor.bgPartColor,
-                                  center: Text(
-                                    '+${bean.state == 1 ? (bean.prestige / bean.totalPrestige).toStringAsFixed(2) + '%' : bean.prestige}',
-                                    style: ts(
-                                      c: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              gap(width: 5),
-                              if (bean.state == 1)
-                                Text('已通过')
-                              else
-                                Observer(
-                                  builder: (_) => Visibility(
-                                    visible: globalMainStore().isInAlliance,
-                                    child: GestureDetector(
-                                      onTap: () {},
-                                      child: Icon(
-                                        SnpIcon.vote,
-                                        size: 20,
-                                        color: CColor.iconColor,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
+                          _progress,
                         ],
                       ),
                     )
@@ -280,6 +210,43 @@ class AllianceApplyCell extends StatelessWidget {
       ),
     );
   }
+
+  get _progress => Row(
+        children: [
+          Expanded(
+            child: LinearPercentIndicator(
+              lineHeight: 20.0,
+              percent: bean.prestige / bean.totalPrestige,
+              linearStrokeCap: LinearStrokeCap.roundAll,
+              progressColor: CColor.mainColor,
+              backgroundColor: CColor.bgPartColor,
+              center: Text(
+                '+${bean.state == 1 ? (bean.prestige / bean.totalPrestige).toStringAsFixed(2) + '%' : bean.prestige}',
+                style: ts(
+                  c: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          gap(width: 5),
+          if (bean.state == 1)
+            Text('已通过')
+          else
+            Observer(
+              builder: (_) => Visibility(
+                visible: globalMainStore.isInAlliance,
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Icon(
+                    SnpIcon.vote,
+                    size: 20,
+                    color: CColor.iconColor,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      );
 
   double get imageSize => (screenWidth - sWidth((15 + 25) * 2.0 + 10)) / 3;
 }

@@ -57,6 +57,7 @@ class _SListViewState extends BaseState<SListView>
           controller: _store.controller,
           firstRefresh: widget.firstRefresh,
           firstRefreshWidget: _firstRefreshWidget(),
+          // shrinkWrap: true,
           header: BallPulseHeader(
             color: CColor.mainColor,
           ),
@@ -191,6 +192,7 @@ class _SListViewState extends BaseState<SListView>
 
   @override
   void dispose() {
+    _store.clearController();
     super.dispose();
   }
 
