@@ -16,6 +16,7 @@ import 'dart:ui';
 import 'package:mobx/mobx.dart';
 import 'package:snp/apis.dart';
 import 'package:snp/beans/alliance_apply_bean.dart';
+import 'package:snp/beans/alliance_info_bean.dart';
 import 'package:snp/common/base/base_color.dart';
 import 'package:snp/common/base/base_config.dart';
 import 'package:snp/common/common.dart';
@@ -85,13 +86,13 @@ abstract class BoardHomeMobx with Store {
   });
 
   @observable
+  AllianceInfoBean allianceInfo;
+
+  @observable
   ObservableList applyList = ObservableList();
 
   @observable
   int page = 1;
-
-  @observable
-  bool isLoading = false;
 
   @observable
   bool noMore = false;
@@ -114,6 +115,16 @@ abstract class BoardHomeMobx with Store {
       this.fecData = ObservableMap.of(fecData);
 
   @action
+  fetchAllianceInfo() async {
+    await http.get(
+      API.allianceInfo,
+      params: {'league_id': globalMainStore.allianceId},
+      onSuccess: (data) => allianceInfo = AllianceInfoBean.fromJson(data.data),
+      onError: (error) => allianceInfo = null,
+    );
+  }
+
+  @action
   fetchAllianceApply(bool refresh) async {
     if (refresh)
       this.page = 1;
@@ -122,7 +133,6 @@ abstract class BoardHomeMobx with Store {
       this.page++;
     }
     this.isError = false;
-    this.isLoading = true;
 
     var _onError = (error) {
       this.isError = true;
@@ -145,7 +155,6 @@ abstract class BoardHomeMobx with Store {
     } else {
       _onError(response);
     }
-    this.isLoading = false;
   }
 
   _initParams() {

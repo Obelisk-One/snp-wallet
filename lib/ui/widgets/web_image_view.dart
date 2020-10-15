@@ -36,59 +36,61 @@ class WebImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double _size = min(sWidth(100), min(width, height)) / 2;
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: height,
-        maxWidth: width,
-      ),
-      child: CachedNetworkImage(
-        height: height,
-        width: width,
-        imageUrl: url + style,
-        imageBuilder: (context, imageProvider) => Container(
-          // height: sHeight(90),
-          height: height,
-          width: width,
-          margin: margin,
-          decoration: BoxDecoration(
-            // shape: BoxShape.circle,
-            borderRadius: BorderRadius.circular(radius),
-            image: DecorationImage(
-              image: imageProvider,
-              fit: fit,
+    return url != null && url.isNotEmpty
+        ? ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: height,
+              maxWidth: width,
             ),
-          ),
-          child: overView,
-        ),
-        placeholder: (context, url) => _placeHolderView(
-          Stack(
-            children: [
-              Center(
-                child: SpinKitCircle(
-                  color: CColor.mainColor,
-                  size: _size,
+            child: CachedNetworkImage(
+              height: height,
+              width: width,
+              imageUrl: (url ?? '') + style,
+              imageBuilder: (context, imageProvider) => Container(
+                // height: sHeight(90),
+                height: height,
+                width: width,
+                margin: margin,
+                decoration: BoxDecoration(
+                  // shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(radius),
+                  image: DecorationImage(
+                    image: imageProvider,
+                    fit: fit,
+                  ),
+                ),
+                child: overView,
+              ),
+              placeholder: (context, url) => _placeHolderView(
+                Stack(
+                  children: [
+                    Center(
+                      child: SpinKitCircle(
+                        color: CColor.mainColor,
+                        size: _size,
+                      ),
+                    ),
+                    overView ?? Container(),
+                  ],
                 ),
               ),
-              overView ?? Container(),
-            ],
-          ),
-        ),
-        errorWidget: (context, url, error) => _placeHolderView(
-          Stack(
-            children: [
-              Center(
-                child: Icon(
-                  SnpIcon.image_failed,
-                  color: CColor.hintTextColor,
-                  size: _size,
+              errorWidget: (context, url, error) => _placeHolderView(
+                Stack(
+                  children: [
+                    Center(
+                      child: Icon(
+                        SnpIcon.image_failed,
+                        color: CColor.hintTextColor,
+                        size: _size,
+                      ),
+                    ),
+                    overView ?? Container(),
+                  ],
                 ),
               ),
-              overView ?? Container(),
-            ],
-          ),
-        ),
-      ),
-    );
+            ),
+          )
+        : _placeHolderView(Container());
   }
 
   Widget _placeHolderView(child) => Container(

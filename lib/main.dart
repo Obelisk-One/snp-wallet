@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:aliossflutter/aliossflutter.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flustars/flustars.dart';
@@ -12,11 +11,12 @@ import 'package:snp/ui/store/user.dart';
 import 'package:snp/ui/splash_page.dart';
 import 'package:uuid/uuid.dart';
 
-final GlobalKey<NavigatorState> rootKey = GlobalKey<NavigatorState>();
+GlobalKey<NavigatorState> rootKey;
 
 void main() async {
   runZoned(
     () async {
+      if (rootKey == null) rootKey = GlobalKey<NavigatorState>();
       _initAsync();
       final botToastBuilder = BotToastInit();
       final builder = (context, child) => Scaffold(

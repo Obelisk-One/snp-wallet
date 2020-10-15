@@ -63,7 +63,7 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
               title: Opacity(
                 opacity: _store.titleOpacity,
                 child: Text(
-                  '联盟名称',
+                  _store.allianceInfo?.name ?? '',
                   style: Font.title,
                 ),
               ),
@@ -71,7 +71,7 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
               pinned: true,
               expandedHeight: statusBarHeight + 240,
               flexibleSpace: FlexibleSpaceBar(
-                background: _renderHeader(),
+                background: Observer(builder: (_) => _renderHeader()),
               ),
               leading: CircleLoader(_headerNotifier),
             ),
@@ -194,6 +194,7 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
         ],
         onRefresh: () async {
           // await Future.delayed(Duration(seconds: 2), () {});
+          await _store.fetchAllianceInfo();
           await _store.fetchAllianceApply(true);
           await _store.fetchAllianceStimulate();
         },
@@ -295,10 +296,8 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                   child: Center(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(4),
-                      child: CachedNetworkImage(
-                        imageUrl:
-                            "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2392853673,4010987567&fm=26&gp=0.jpg",
-                        fit: BoxFit.cover,
+                      child: WebImage(
+                        url: _store.allianceInfo?.flagPic,
                         width: 60,
                         height: 44,
                       ),
@@ -306,7 +305,7 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                   ),
                 ),
                 Text(
-                  '联盟名称',
+                  _store.allianceInfo?.name ?? '',
                   style: Font.overMain,
                 ),
                 Container(
@@ -317,9 +316,10 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '联盟的简介：文本文本文本文本文本文本文文本文本文本文本文本文本文本文本文文本文本文本文本文本文本文本文本文文本文本文本文本文本文本文本文本文文本文本',
+                        '联盟的简介：${(_store.allianceInfo?.bio ?? '暂无简介')}\n',
                         style: Font.overMainS,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -329,8 +329,24 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            '由@AAD最后修订',
+                            _store.allianceInfo == null ||
+                                    _store.allianceInfo.authorName == null ||
+                                    _store.allianceInfo.authorName.isEmpty
+                                ? '还没有成员设置过联盟简介'
+                                : '由@${_store.allianceInfo.authorName}最后修订',
                             style: Font.overMainXS,
+                          ),
+                          gap(width: 10),
+                          Visibility(
+                            visible: globalMainStore.isInAlliance,
+                            child: GestureDetector(
+                              onTap: () {},
+                              child: Icon(
+                                Icons.edit_outlined,
+                                size: 18,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -358,8 +374,10 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _card('我的声誉', '116', CColor.orange),
-                  _card('新增FEC', '216.68', CColor.green),
+                  _card('我的声誉', _store.allianceInfo?.prestige ?? '0',
+                      CColor.orange),
+                  _card('新增FEC', _store.allianceInfo?.money ?? '0.00',
+                      CColor.green),
                 ],
               ),
             ),
@@ -405,7 +423,7 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
               ),
               gap(height: 5),
               Text(
-                value,
+                value.toString(),
                 style: TextStyle(
                   color: CColor.textColor,
                   fontSize: 22,

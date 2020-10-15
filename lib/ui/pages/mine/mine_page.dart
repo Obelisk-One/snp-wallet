@@ -13,6 +13,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:snp/beans/my_alliance_bean.dart';
 import 'package:snp/beans/user_bean.dart';
 import 'package:snp/common/common.dart';
 import 'package:snp/ui/base/base_stateful.dart';
@@ -25,6 +26,7 @@ import 'package:snp/ui/store/user.dart';
 import 'package:snp/ui/widgets/avatar_view.dart';
 import 'package:snp/ui/widgets/circle_loader_view.dart';
 import 'package:snp/ui/widgets/tab_view.dart';
+import 'package:snp/ui/widgets/web_image_view.dart';
 
 class MinePage extends StatefulWidget {
   @override
@@ -88,20 +90,11 @@ class _MinePageState extends BaseState<MinePage> {
                 collapseMode: CollapseMode.pin,
                 background: Stack(
                   children: [
-                    CachedNetworkImage(
-                      imageUrl:
-                          'https://img9.doubanio.com/view/photo/l/public/p2557533726.webp',
-                      fit: BoxFit.cover,
-                      width: screenWidth,
-                      height: _allianceImageHeight,
-                      placeholder: (context, str) => Container(
-                        color: CColor.bgPartColor,
-                        child: Center(
-                          child: SpinKitDoubleBounce(
-                            color: CColor.mainColor,
-                            size: 35,
-                          ),
-                        ),
+                    Observer(
+                      builder: (_) => WebImage(
+                        url: _store.currentAlliance?.flagPic,
+                        width: screenWidth,
+                        height: _allianceImageHeight,
                       ),
                     ),
                     Positioned(
@@ -130,17 +123,23 @@ class _MinePageState extends BaseState<MinePage> {
                         key: _key,
                         children: [
                           _renderPersonalCard(),
-                          TabView(
-                            tabs: ['联盟名称1', '联盟名称2'],
-                            views: <Widget>[
-                              _renderAllianceCard(),
-                              _renderAllianceCard(),
-                            ],
-                            tabsAlignLeft: true,
-                            tabMargin: sInsetsHV(15, 0),
-                            height: sHeight(140),
-                            onChanged: (index) => print('~~~~~~~~~~$index'),
-                          ),
+                          _store.myAlliances.isNotEmpty
+                              ? TabView(
+                                  tabs: _store.myAlliances
+                                      .map((e) => e.name)
+                                      .toList(),
+                                  views: _store.myAlliances
+                                      .map((e) => _renderAllianceCard(e))
+                                      .toList(),
+                                  tabsAlignLeft: true,
+                                  initialIndex:
+                                      _store.myAlliances.isNotEmpty ? 0 : -1,
+                                  tabMargin: sInsetsHV(15, 0),
+                                  height: sHeight(170),
+                                  onChanged: (index) =>
+                                      _store.switchAlliance(index),
+                                )
+                              : gap(height: 215),
                         ],
                       ),
                     ),
@@ -151,21 +150,24 @@ class _MinePageState extends BaseState<MinePage> {
           ),
           SliverFixedExtentList(
             itemExtent: 50,
-            delegate:
-                SliverChildBuilderDelegate((BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () => sState(() => _headerHeight -= 10),
-                child: Container(
-                  alignment: Alignment.center,
-                  color: Colors.lightGreen[100 * ((20 - index) % 9)],
-                  child: Text('list item $index'),
-                ),
-              );
-            }, childCount: 20),
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () => sState(() => _headerHeight -= 10),
+                  child: Container(
+                    alignment: Alignment.center,
+                    color: Colors.lightGreen[100 * ((20 - index) % 9)],
+                    child: Text('list item $index'),
+                  ),
+                );
+              },
+              childCount: 20,
+            ),
           ),
         ],
         onRefresh: () async {
           await globalUserStore.fetchUserInfo();
+          await _store.fetchMyAlliances();
         },
         onLoad: () async {
           await Future.delayed(Duration(seconds: 2), () {});
@@ -176,7 +178,8 @@ class _MinePageState extends BaseState<MinePage> {
 
   _renderPersonalCard() => Observer(
         builder: (_) => GestureDetector(
-          onTap: () => globalUserStore.bean == null ? null : push(PersonalPage()),
+          onTap: () =>
+              globalUserStore.bean == null ? null : push(PersonalPage()),
           child: Container(
             margin: sInsetsLTRB(15, 0, 15, 10),
             padding: sInsetsAll(10),
@@ -192,104 +195,76 @@ class _MinePageState extends BaseState<MinePage> {
                 ),
               ],
             ),
-            child: globalUserStore.bean == null
-                ? Column(
-                    children: [
-                      Padding(
-                        padding: sInsetsHV(20, 0),
-                        child: Text(
-                          '获取用户信息失败',
-                          style: Font.hintL,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      gap(height: 10),
-                      CommonButton(
-                        text: '刷新',
-                        width: sWidth(100),
-                        height: sHeight(30),
-                        borderColor: CColor.hintTextColor,
-                        borderWidth: 1,
-                        fontSize: sFontSize(14),
-                        textColor: CColor.hintTextColor,
-                        elevation: 0,
-                        radius: 10,
-                        backColor: CColor.cardColor,
-                        onClick: () => _refreshController.callRefresh(),
-                      ),
-                    ],
-                  )
-                : Row(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Avatar(
+                  globalUserStore.bean?.avatar,
+                  size: 50,
+                ),
+                gap(width: 10),
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Avatar(
-                        globalUserStore.bean.avatar,
-                        size: 50,
-                      ),
-                      gap(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    children: <InlineSpan>[
-                                      TextSpan(
-                                        text: '${globalUserStore.bean.nickname} ',
-                                        style: Font.normal,
-                                      ),
-                                      TextSpan(
-                                        text: ObjectUtil.isEmptyString(
-                                            globalUserStore.bean.username)
-                                            ? ''
-                                            : '@${globalUserStore.bean.username}',
-                                        style: Font.minor,
-                                      ),
-                                    ],
-                                  ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              children: <InlineSpan>[
+                                TextSpan(
+                                  text:
+                                      '${globalUserStore.bean?.nickname ?? ''} ',
+                                  style: Font.normal,
                                 ),
-                                Visibility(
-                                  visible: !ObjectUtil.isEmptyString(
-                                      globalUserStore.bean.areaName),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.location_on,
-                                        color: CColor.hintTextColor,
-                                        size: 14,
-                                      ),
-                                      Text(
-                                        globalUserStore.bean.areaName,
-                                        style: Font.hintXS,
-                                      ),
-                                    ],
-                                  ),
+                                TextSpan(
+                                  text: ObjectUtil.isEmpty(
+                                          globalUserStore.bean?.username)
+                                      ? ''
+                                      : '@${globalUserStore.bean.username}',
+                                  style: Font.minor,
                                 ),
                               ],
                             ),
-                            gap(height: 5),
-                            Text(
-                              ObjectUtil.isEmptyString(globalUserStore.bean.disc)
-                                  ? '暂无简介'
-                                  : globalUserStore.bean.disc,
-                              style: Font.minorS,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                          ),
+                          Visibility(
+                            visible: ObjectUtil.isNotEmpty(
+                                globalUserStore.bean?.areaName),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  color: CColor.hintTextColor,
+                                  size: 14,
+                                ),
+                                Text(
+                                  globalUserStore.bean?.areaName ?? '',
+                                  style: Font.hintXS,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
+                      gap(height: 5),
+                      Text(
+                        (globalUserStore.bean?.disc ?? '暂无简介') + '\n',
+                        style: Font.minorS,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
+                ),
+              ],
+            ),
           ),
         ),
       );
 
-  _renderAllianceCard() => Container(
+  Widget _renderAllianceCard(MyAllianceBean item) => Container(
         margin: sInsetsHV(15, 10),
         padding: sInsetsAll(10),
         decoration: BoxDecoration(
@@ -308,7 +283,7 @@ class _MinePageState extends BaseState<MinePage> {
                     style: Font.minorS,
                   ),
                   TextSpan(
-                    text: '8367',
+                    text: item.prestige.toString(),
                     style: Font.lightL,
                   ),
                 ],
@@ -319,18 +294,59 @@ class _MinePageState extends BaseState<MinePage> {
             ),
             Text(
               '我的勋章',
-              style: Font.title,
+              style: Font.normalH,
+            ),
+            gap(height: 10),
+            Expanded(
+              child: item.medal.isEmpty
+                  ? Center(
+                      child: Text(
+                        '您在该联盟暂未获得任何徽章',
+                        style: Font.minor,
+                      ),
+                    )
+                  : SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: item.medal
+                            .map((e) => _medalItem(e, item.medal.length))
+                            .toList(),
+                      ),
+                    ),
             ),
           ],
         ),
       );
+
+  Widget _medalItem(Medal medal, int count) {
+    double _itemWidth = (screenWidth - sWidth(50)) / (count <= 3 ? count : 3.5);
+    return Container(
+      width: _itemWidth,
+      height: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          WebImage(
+            url: medal.image,
+            width: 60,
+            height: 60,
+          ),
+          gap(height: 5),
+          Text(
+            medal.name,
+            style: Font.normal,
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController()
       ..addListener(() {
-        if (_scrollController.offset >= 480)
+        if (_scrollController.offset >= _allianceImageHeight - sHeight(35))
           _store.setBrightness(Brightness.light);
         else if (_scrollController.offset < 480)
           _store.setBrightness(Brightness.dark);
@@ -345,6 +361,13 @@ class _MinePageState extends BaseState<MinePage> {
   void onResume() {
     _refreshController.callRefresh();
     super.onResume();
+  }
+
+  @override
+  void dispose() {
+    _scrollController = null;
+    _refreshController = null;
+    super.dispose();
   }
 
   @override

@@ -221,7 +221,11 @@ class AllianceApplyCell extends StatelessWidget {
               progressColor: CColor.mainColor,
               backgroundColor: CColor.bgPartColor,
               center: Text(
-                '+${bean.state == 1 ? (bean.prestige / bean.totalPrestige).toStringAsFixed(2) + '%' : bean.prestige}',
+                bean.state == 1
+                    ? (bean.prestige / bean.totalPrestige * 100)
+                            .toStringAsFixed(2) +
+                        '%'
+                    : '+' + bean.prestige.toString(),
                 style: ts(
                   c: Colors.white,
                 ),

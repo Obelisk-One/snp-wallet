@@ -19,15 +19,12 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _url = Config.defaultAvatar;
-    if (!ObjectUtil.isEmptyString(url)) _url = url;
-
     return SizedBox(
       width: sWidth(size),
       height: sWidth(size),
       child: ClipOval(
         child: CachedNetworkImage(
-          imageUrl: _url,
+          imageUrl: url ?? Config.defaultAvatar,
           fit: BoxFit.cover,
           placeholder: (context, url) => Center(
             child: SpinKitDoubleBounce(

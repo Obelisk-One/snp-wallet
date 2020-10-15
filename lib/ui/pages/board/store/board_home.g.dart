@@ -69,6 +69,21 @@ mixin _$BoardHomeStore on BoardHomeMobx, Store {
     });
   }
 
+  final _$allianceInfoAtom = Atom(name: 'BoardHomeMobx.allianceInfo');
+
+  @override
+  AllianceInfoBean get allianceInfo {
+    _$allianceInfoAtom.reportRead();
+    return super.allianceInfo;
+  }
+
+  @override
+  set allianceInfo(AllianceInfoBean value) {
+    _$allianceInfoAtom.reportWrite(value, super.allianceInfo, () {
+      super.allianceInfo = value;
+    });
+  }
+
   final _$applyListAtom = Atom(name: 'BoardHomeMobx.applyList');
 
   @override
@@ -96,21 +111,6 @@ mixin _$BoardHomeStore on BoardHomeMobx, Store {
   set page(int value) {
     _$pageAtom.reportWrite(value, super.page, () {
       super.page = value;
-    });
-  }
-
-  final _$isLoadingAtom = Atom(name: 'BoardHomeMobx.isLoading');
-
-  @override
-  bool get isLoading {
-    _$isLoadingAtom.reportRead();
-    return super.isLoading;
-  }
-
-  @override
-  set isLoading(bool value) {
-    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
-      super.isLoading = value;
     });
   }
 
@@ -142,6 +142,14 @@ mixin _$BoardHomeStore on BoardHomeMobx, Store {
     _$isErrorAtom.reportWrite(value, super.isError, () {
       super.isError = value;
     });
+  }
+
+  final _$fetchAllianceInfoAsyncAction =
+      AsyncAction('BoardHomeMobx.fetchAllianceInfo');
+
+  @override
+  Future fetchAllianceInfo() {
+    return _$fetchAllianceInfoAsyncAction.run(() => super.fetchAllianceInfo());
   }
 
   final _$fetchAllianceApplyAsyncAction =
@@ -216,9 +224,9 @@ brightness: ${brightness},
 titleOpacity: ${titleOpacity},
 fameData: ${fameData},
 fecData: ${fecData},
+allianceInfo: ${allianceInfo},
 applyList: ${applyList},
 page: ${page},
-isLoading: ${isLoading},
 noMore: ${noMore},
 isError: ${isError}
     ''';

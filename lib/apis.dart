@@ -14,6 +14,7 @@ class API {
   static final String updateUserInfo = 'api/v1/user/updating';
   static final String userInfo = 'api/v1/user/info';
   static final String userList = 'api/v1/user/list';
+  static final String myAlliances = 'api/v1/league/owner';
 
   static final String allianceList = 'api/v1/league/list';
   static final String canCreateAlliance = 'api/v1/league/verify/create';
@@ -22,12 +23,12 @@ class API {
   static final String allianceBrief = 'api/v1/league/bulletin';
   static final String allianceMineMessage = 'api/v1/league/mine';
   static final String isInAlliance = 'api/v1/league/verify/join';
+  static final String allianceInfo = 'api/v1/league/header';
   static final String allianceApply = 'api/v1/league/manager';
   static final String allianceStimulate = 'api/v1/league/stimulate';
 
   static final String isInLevelTow = 'api/v1/league/verify/level2';
   static final String applyJoinToAlliance = 'api/v1/league/join';
-  // static final String isInLevelTow = 'api/v1/league/verify/level2';
 
   static final String wallet = 'api/v1/wallet/list';
 }
