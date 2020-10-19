@@ -17,6 +17,7 @@ import 'package:snp/ui/pages/news/alliance_list_view.dart';
 import 'package:snp/ui/pages/news/news_home_page.dart';
 import 'package:snp/ui/pages/wallet/wallet_home_page.dart';
 import 'package:snp/ui/store/main_store.dart';
+import 'package:snp/ui/store/user.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key key}) : super(key: key);
@@ -51,8 +52,9 @@ class _MainPageState extends BaseState<MainPage> {
   }
 
   @override
-  void onResume() {
-    super.onResume();
+  void initState() {
+    globalUserStore.fetchUserInfo();
+    super.initState();
   }
 
   @override

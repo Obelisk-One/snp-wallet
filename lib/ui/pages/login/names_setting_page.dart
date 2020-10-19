@@ -35,14 +35,14 @@ class _NamesSettingPageState extends BaseState<NamesSettingPage> {
               _textField(_usernameController, '唯一用户名'),
               gap(height: 10),
               Text(
-                "用户名4-10个字符，支持英文、数字、“-”或减号，用户名是唯一的并一经设置不可修改",
+                "用户名4-10个字符，仅支持字母、数字和下划线，用户名是唯一的并一经设置不可修改",
                 style: Font.hintS,
               ),
               gap(height: 20),
               _textField(_nicknameController, '请填写你的昵称'),
               gap(height: 10),
               Text(
-                "昵称4-16个字符，支持中英文，允许空格及下划线",
+                "昵称最多8个字符，不可包含特殊字符",
                 style: Font.hintS,
               ),
               gap(height: 50),

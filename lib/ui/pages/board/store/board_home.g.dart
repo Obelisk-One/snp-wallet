@@ -87,13 +87,13 @@ mixin _$BoardHomeStore on BoardHomeMobx, Store {
   final _$applyListAtom = Atom(name: 'BoardHomeMobx.applyList');
 
   @override
-  ObservableList<dynamic> get applyList {
+  ObservableList<AllianceApplyBean> get applyList {
     _$applyListAtom.reportRead();
     return super.applyList;
   }
 
   @override
-  set applyList(ObservableList<dynamic> value) {
+  set applyList(ObservableList<AllianceApplyBean> value) {
     _$applyListAtom.reportWrite(value, super.applyList, () {
       super.applyList = value;
     });
@@ -144,6 +144,51 @@ mixin _$BoardHomeStore on BoardHomeMobx, Store {
     });
   }
 
+  final _$stakeListAtom = Atom(name: 'BoardHomeMobx.stakeList');
+
+  @override
+  ObservableList<AllianceStakeBean> get stakeList {
+    _$stakeListAtom.reportRead();
+    return super.stakeList;
+  }
+
+  @override
+  set stakeList(ObservableList<AllianceStakeBean> value) {
+    _$stakeListAtom.reportWrite(value, super.stakeList, () {
+      super.stakeList = value;
+    });
+  }
+
+  final _$fetchStakeErrorAtom = Atom(name: 'BoardHomeMobx.fetchStakeError');
+
+  @override
+  bool get fetchStakeError {
+    _$fetchStakeErrorAtom.reportRead();
+    return super.fetchStakeError;
+  }
+
+  @override
+  set fetchStakeError(bool value) {
+    _$fetchStakeErrorAtom.reportWrite(value, super.fetchStakeError, () {
+      super.fetchStakeError = value;
+    });
+  }
+
+  final _$myCapacityAtom = Atom(name: 'BoardHomeMobx.myCapacity');
+
+  @override
+  int get myCapacity {
+    _$myCapacityAtom.reportRead();
+    return super.myCapacity;
+  }
+
+  @override
+  set myCapacity(int value) {
+    _$myCapacityAtom.reportWrite(value, super.myCapacity, () {
+      super.myCapacity = value;
+    });
+  }
+
   final _$fetchAllianceInfoAsyncAction =
       AsyncAction('BoardHomeMobx.fetchAllianceInfo');
 
@@ -161,13 +206,21 @@ mixin _$BoardHomeStore on BoardHomeMobx, Store {
         .run(() => super.fetchAllianceApply(refresh));
   }
 
-  final _$fetchAllianceStimulateAsyncAction =
-      AsyncAction('BoardHomeMobx.fetchAllianceStimulate');
+  final _$fetchAllianceStakeAsyncAction =
+      AsyncAction('BoardHomeMobx.fetchAllianceStake');
 
   @override
-  Future fetchAllianceStimulate() {
-    return _$fetchAllianceStimulateAsyncAction
-        .run(() => super.fetchAllianceStimulate());
+  Future fetchAllianceStake() {
+    return _$fetchAllianceStakeAsyncAction
+        .run(() => super.fetchAllianceStake());
+  }
+
+  final _$fetchMyCapacityAsyncAction =
+      AsyncAction('BoardHomeMobx.fetchMyCapacity');
+
+  @override
+  Future fetchMyCapacity() {
+    return _$fetchMyCapacityAsyncAction.run(() => super.fetchMyCapacity());
   }
 
   final _$BoardHomeMobxActionController =
@@ -228,7 +281,10 @@ allianceInfo: ${allianceInfo},
 applyList: ${applyList},
 page: ${page},
 noMore: ${noMore},
-isError: ${isError}
+isError: ${isError},
+stakeList: ${stakeList},
+fetchStakeError: ${fetchStakeError},
+myCapacity: ${myCapacity}
     ''';
   }
 }

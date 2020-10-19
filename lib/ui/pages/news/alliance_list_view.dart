@@ -36,12 +36,16 @@ class AllianceListView extends StatelessWidget {
                 icon: Icon(Icons.add),
                 tooltip: '创建联盟',
                 onPressed: () {
-                  afterLoading(http.get(API.canCreateAlliance), seconds: 0)
+                  afterLoading(http.get(API.canCreateAlliance), seconds: 1)
                       .then((data) {
-                    if (!data.error)
-                      push(CreateAllianceView());
-                    else
-                      toast(data.msg);
+                    if (data.error)
+                      toast('获取权限失败');
+                    else {
+                      if (data.data == 1)
+                        push(CreateAllianceView());
+                      else
+                        toast('您暂无创建联盟的权限');
+                    }
                   });
                 },
               ),

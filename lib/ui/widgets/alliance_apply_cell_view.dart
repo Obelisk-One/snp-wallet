@@ -15,10 +15,17 @@ import 'package:snp/ui/store/main_store.dart';
 import 'package:snp/ui/widgets/avatar_view.dart';
 import 'package:snp/ui/widgets/web_image_view.dart';
 
+typedef VoteCallBack = void Function(int dataId);
+
 class AllianceApplyCell extends StatelessWidget {
   final AllianceApplyBean bean;
+  final Function onVote;
 
-  const AllianceApplyCell(this.bean, {Key key}) : super(key: key);
+  const AllianceApplyCell(
+    this.bean, {
+    this.onVote,
+    Key key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -126,13 +133,19 @@ class AllianceApplyCell extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          WebImage(
-                            url: bean.extend.invite.images[0],
-                            radius: 5,
-                            width: imageSize,
-                            height: imageSize,
-                            style: Config.oss_style_thumb,
-                            margin: sInsetsLTRB(5, 0, 0, 0),
+                          GestureDetector(
+                            onTap: () => ImageSelector.previewWebImages(
+                              0,
+                              [bean.extend.invite.images[0]],
+                            ),
+                            child: WebImage(
+                              url: bean.extend.invite.images[0],
+                              radius: 5,
+                              width: imageSize,
+                              height: imageSize,
+                              style: Config.oss_style_thumb,
+                              margin: sInsetsLTRB(5, 0, 0, 0),
+                            ),
                           ),
                         ],
                       ),
@@ -240,7 +253,9 @@ class AllianceApplyCell extends StatelessWidget {
               builder: (_) => Visibility(
                 visible: globalMainStore.isInAlliance,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    if (onVote != null) onVote();
+                  },
                   child: Icon(
                     SnpIcon.vote,
                     size: 20,

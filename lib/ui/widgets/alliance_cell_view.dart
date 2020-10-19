@@ -32,40 +32,10 @@ class AllianceCellView extends StatelessWidget {
       child: WebImage(
         url: bean.flagPic,
         margin: sInsetsHV(0, 5),
-        height: sHeight(90),
+        height: sHeight(100),
         radius: 10,
         overView: _contentView(),
       ),
-      // child: CachedNetworkImage(
-      //   imageUrl: bean.flagPic+'_org11',
-      //   imageBuilder: (context, imageProvider) => Container(
-      //     height: sHeight(90),
-      //     margin: sInsetsHV(0, 5),
-      //     decoration: BoxDecoration(
-      //       // shape: BoxShape.circle,
-      //       borderRadius: BorderRadius.circular(10),
-      //       image: DecorationImage(
-      //         image: imageProvider,
-      //         fit: BoxFit.cover,
-      //       ),
-      //     ),
-      //     child: _contentView(),
-      //   ),
-      //   placeholder: (context, url) => _placeHolderView(
-      //     Stack(
-      //       children: [
-      //         Center(
-      //           child: SpinKitDoubleBounce(
-      //             color: CColor.mainColor,
-      //             size: sWidth(50),
-      //           ),
-      //         ),
-      //         _contentView(),
-      //       ],
-      //     ),
-      //   ),
-      //   errorWidget: (context, url, error) => _placeHolderView(_contentView()),
-      // ),
     );
   }
 

@@ -25,7 +25,10 @@ class API {
   static final String isInAlliance = 'api/v1/league/verify/join';
   static final String allianceInfo = 'api/v1/league/header';
   static final String allianceApply = 'api/v1/league/manager';
-  static final String allianceStimulate = 'api/v1/league/stimulate';
+  static final String allianceStake = 'api/v1/league/stimulate';
+  static final String myCapacityInAlliance = 'api/v1/league/capacity';
+  static final String doStake = 'api/v1/league/stimulate/stake';
+  static final String doVote = 'api/v1/league/manager/vote';
 
   static final String isInLevelTow = 'api/v1/league/verify/level2';
   static final String applyJoinToAlliance = 'api/v1/league/join';

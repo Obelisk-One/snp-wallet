@@ -19,8 +19,10 @@ import 'package:snp/ui/pages/board/invite_user_view.dart';
 import 'package:snp/ui/pages/board/store/board_home.dart';
 import 'package:snp/ui/store/main_store.dart';
 import 'package:snp/ui/widgets/alliance_apply_cell_view.dart';
+import 'package:snp/ui/widgets/alliance_stake_cell.dart';
 import 'package:snp/ui/widgets/avatar_view.dart';
 import 'package:snp/ui/widgets/circle_loader_view.dart';
+import 'package:snp/ui/widgets/message_dialog.dart';
 import 'package:snp/ui/widgets/snp_list_view.dart';
 import 'package:snp/ui/widgets/tab_view.dart';
 import 'package:snp/ui/widgets/web_image_view.dart';
@@ -153,9 +155,60 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
               builder: (_) => SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    if (index < _store.applyList.length)
-                      return AllianceApplyCell(_store.applyList[index]);
-                    else
+                    if (index < _store.applyList.length) {
+                      AllianceApplyBean _bean =
+                          _store.applyList.elementAt(index);
+                      return AllianceApplyCell(
+                        _bean,
+                        onVote: () {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => MessageDialog(
+                              title: '确认操作',
+                              message: RichText(
+                                textAlign: TextAlign.center,
+                                // maxLines: 2,
+                                // overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  children: <InlineSpan>[
+                                    TextSpan(
+                                      text: '同意 ${_bean.nickname}',
+                                      style: Font.normal,
+                                    ),
+                                    TextSpan(
+                                      text: ' @${_bean.username} ',
+                                      style: Font.minorS,
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          ' 加入联盟吗?\n对方将获得 ${_store.allianceInfo.prestige} 票数',
+                                      style: Font.normal,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onRightClick: () => afterLoading(http.post(
+                                API.doVote,
+                                params: <String, dynamic>{
+                                  'manager_id': _bean.id,
+                                },
+                                onSuccess: (data) {},
+                                onError: (error) {},
+                              )).then((data) {
+                                pop();
+                                if (data.error)
+                                  toast(data.msg);
+                                else {
+                                  _store.fetchAllianceApply(true);
+                                  toast('投票成功');
+                                }
+                              }),
+                            ),
+                          );
+                        },
+                      );
+                    } else
                       return Container(
                         height: sHeight(50),
                         child: Center(
@@ -177,17 +230,41 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
           ),
           SliverVisibility(
             visible: !_showFirst,
-            sliver: SliverFixedExtentList(
-              itemExtent: _showFirst ? 0 : 30,
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return Container(
-                    alignment: Alignment.center,
-                    color: Colors.lightGreen[100 * (index % 9)],
-                    child: Text('list item $index'),
-                  );
-                },
-                childCount: 20,
+            sliver: Observer(
+              builder: (_) => SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    if (index < _store.stakeList.length) {
+                      if (index == 0 && globalMainStore.isInAlliance)
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: sInsetsLTRB(15, 10, 15, 0),
+                              child: Text(
+                                '剩余可用能量：${_store.myCapacity}',
+                                style: Font.normalL,
+                              ),
+                            ),
+                            _stakeCell(index),
+                          ],
+                        );
+                      return _stakeCell(index);
+                    } else
+                      return Container(
+                        height: sHeight(50),
+                        child: Center(
+                          child: Text(
+                            _store.fetchStakeError
+                                ? '获取数据失败,请重试'
+                                : '-----我是有底线的-----',
+                            style: Font.hintS,
+                          ),
+                        ),
+                      );
+                  },
+                  childCount: _store.stakeList.length + 1,
+                ),
               ),
             ),
           ),
@@ -196,7 +273,8 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
           // await Future.delayed(Duration(seconds: 2), () {});
           await _store.fetchAllianceInfo();
           await _store.fetchAllianceApply(true);
-          await _store.fetchAllianceStimulate();
+          await _store.fetchMyCapacity();
+          await _store.fetchAllianceStake();
         },
         onLoad: _showFirst && !_store.noMore
             ? () async {
@@ -206,6 +284,25 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
       ),
     );
   }
+
+  _stakeCell(index) => AllianceStakeCell(
+        _store.stakeList[index],
+        _store.myCapacity,
+        onConfirm: (value, userId) {
+          showLoading();
+          _store.doStake(value, userId).then((value) async {
+            if (value.error) {
+              dismissLoading();
+              toast('Stake失败,请重试\n${value.msg}');
+            } else {
+              await _store.fetchAllianceStake();
+              // await _store.fetchMyCapacity();
+              dismissLoading();
+              toast('Stake成功');
+            }
+          });
+        },
+      );
 
   _renderChartView(Map data) => Container(
         margin: sInsetsHV(15, 10),
@@ -361,8 +458,9 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
             top: 0,
             child: Image.asset(
               'assets/images/icon_header_right.png',
-              width: 95,
-              height: 105,
+              fit: BoxFit.cover,
+              width: 95 * 1.5,
+              height: 105 * 1.5,
             ),
           ),
           Positioned(

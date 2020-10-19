@@ -78,20 +78,28 @@ class CommonButton extends StatelessWidget {
       disabledColor: disableBackColor ?? CColor.mainDisableColor,
       disabledTextColor: disableTextColor ?? Colors.white,
       onPressed: isDisable ? null : onClick,
-      shape: isEmpty(radius)
-          ? StadiumBorder(
+      shape: radius == 0
+          ? BeveledRectangleBorder(
               side: BorderSide(
                 width: borderWidth,
                 color: borderColor,
               ),
+              borderRadius: BorderRadius.circular(0),
             )
-          : RoundedRectangleBorder(
-              side: BorderSide(
-                width: borderWidth,
-                color: borderColor,
-              ),
-              borderRadius: BorderRadius.circular(radius),
-            ),
+          : isEmpty(radius)
+              ? StadiumBorder(
+                  side: BorderSide(
+                    width: borderWidth,
+                    color: borderColor,
+                  ),
+                )
+              : RoundedRectangleBorder(
+                  side: BorderSide(
+                    width: borderWidth,
+                    color: borderColor,
+                  ),
+                  borderRadius: BorderRadius.circular(radius),
+                ),
     );
     return Container(
       margin: margin ?? sInsetsAll(0),

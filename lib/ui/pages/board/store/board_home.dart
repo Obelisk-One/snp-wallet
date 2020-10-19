@@ -17,6 +17,7 @@ import 'package:mobx/mobx.dart';
 import 'package:snp/apis.dart';
 import 'package:snp/beans/alliance_apply_bean.dart';
 import 'package:snp/beans/alliance_info_bean.dart';
+import 'package:snp/beans/alliance_stake_bean.dart';
 import 'package:snp/common/base/base_color.dart';
 import 'package:snp/common/base/base_config.dart';
 import 'package:snp/common/common.dart';
@@ -89,7 +90,7 @@ abstract class BoardHomeMobx with Store {
   AllianceInfoBean allianceInfo;
 
   @observable
-  ObservableList applyList = ObservableList();
+  ObservableList<AllianceApplyBean> applyList = ObservableList();
 
   @observable
   int page = 1;
@@ -99,6 +100,15 @@ abstract class BoardHomeMobx with Store {
 
   @observable
   bool isError = false;
+
+  @observable
+  ObservableList<AllianceStakeBean> stakeList = ObservableList();
+
+  @observable
+  bool fetchStakeError = false;
+
+  @observable
+  int myCapacity = 0;
 
   @action
   void setBrightness(Brightness brightness) => this.brightness = brightness;
@@ -141,37 +151,74 @@ abstract class BoardHomeMobx with Store {
     };
     var response = await http.get(
       API.allianceApply,
-      params: _initParams(),
+      params: {
+        'league_id': globalMainStore.allianceId,
+        'page': this.page,
+        'size': 5,
+      },
       onError: _onError,
     );
 
     if ((response.code ?? 0) == 1) {
-      List _dataList = getAllianceApplyBeanList(response.data['data']);
+      List<AllianceApplyBean> _dataList =
+          getAllianceApplyBeanList(response.data['data']);
       if (refresh)
         this.applyList = ObservableList.of(_dataList);
       else
         this.applyList.addAll(_dataList);
       this.noMore = response.data['current_page'] >= response.data['last_page'];
-    } else {
+    } else
       _onError(response);
-    }
-  }
-
-  _initParams() {
-    Map<String, dynamic> _params = Map<String, dynamic>();
-    _params['league_id'] = globalMainStore.allianceId;
-    _params['page'] = this.page;
-    _params['size'] = Config.listPageSize;
-    return _params;
   }
 
   @action
-  fetchAllianceStimulate() async {
-    // await http.get(
-    //   API.allianceStimulate,
-    //   params: {
-    //     'league_id': globalMainStore().allianceId,
-    //   },
-    // );
+  fetchAllianceStake() async {
+    var _onError = (error) {
+      this.fetchStakeError = true;
+      this.stakeList.clear();
+    };
+    var response = await http.get(
+      API.allianceStake,
+      params: {
+        'league_id': globalMainStore.allianceId,
+      },
+      onError: _onError,
+    );
+
+    if ((response.code ?? 0) == 1) {
+      if (ObjectUtil.isEmpty(response.data))
+        _onError(response);
+      else {
+        List<AllianceStakeBean> _dataList =
+            getAllianceStakeBeanList(response.data);
+        this.stakeList = ObservableList.of(_dataList);
+      }
+    } else
+      _onError(response);
+  }
+
+  @action
+  fetchMyCapacity() async {
+    if (!globalMainStore.isInAlliance) return;
+    await http.get(
+      API.myCapacityInAlliance,
+      params: {'league_id': globalMainStore.allianceId},
+      onSuccess: (data) => this.myCapacity = data.data ?? 0,
+      onError: (error) => this.myCapacity = 0,
+    );
+  }
+
+  @action
+  doStake(int value, int userId) async {
+    if (!globalMainStore.isInAlliance) return;
+    return await http.post(
+      API.doStake,
+      params: <String, dynamic>{
+        'league_id': globalMainStore.allianceId,
+        'user_id': userId,
+        'amount': value,
+      },
+      onSuccess: (data) => this.myCapacity = data.data ?? 0,
+    );
   }
 }

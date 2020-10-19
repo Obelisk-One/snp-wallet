@@ -31,4 +31,5 @@ class SnpIcon {
   static const IconData edit = const IconData(0xe630, fontFamily: "SnpIcon");
   static const IconData image_failed = const IconData(0xe6eb, fontFamily: "SnpIcon");
   static const IconData vote = const IconData(0xe60c, fontFamily: "SnpIcon");
+  static const IconData stake = const IconData(0xe62f, fontFamily: "SnpIcon");
 }

@@ -19,8 +19,8 @@ import 'package:snp/ui/store/user.dart';
 
 class VerifyKeyPage extends StatelessWidget {
   final TextEditingController _controller = TextEditingController(
-    text:
-        'panther,frown,blame,addict,hotel,vendor,joy,advice,fork,proud,first,report,nuclear,pigeon,youth,suspect,hero,describe,exercise,tongue,seminar,impact,wrong,right',
+    // text:
+    //     'panther,frown,blame,addict,hotel,vendor,joy,advice,fork,proud,first,report,nuclear,pigeon,youth,suspect,hero,describe,exercise,tongue,seminar,impact,wrong,right',
   );
 
   @override

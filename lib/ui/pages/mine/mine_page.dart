@@ -91,11 +91,35 @@ class _MinePageState extends BaseState<MinePage> {
                 background: Stack(
                   children: [
                     Observer(
-                      builder: (_) => WebImage(
-                        url: _store.currentAlliance?.flagPic,
-                        width: screenWidth,
-                        height: _allianceImageHeight,
-                      ),
+                      builder: (_) => ObjectUtil.isEmpty(_store.currentAlliance)
+                          ? SizedBox(
+                              width: screenWidth,
+                              height: _allianceImageHeight,
+                              child: Stack(
+                                children: [
+                                  Positioned.fill(
+                                    child: ColoredBox(
+                                      color: CColor.mainColor,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 0,
+                                    top: 0,
+                                    child: Image.asset(
+                                      'assets/images/icon_header_right.png',
+                                      fit: BoxFit.cover,
+                                      width: 95 * 1.5,
+                                      height: 105 * 1.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : WebImage(
+                              url: _store.currentAlliance?.flagPic,
+                              width: screenWidth,
+                              height: _allianceImageHeight,
+                            ),
                     ),
                     Positioned(
                       top: 0,
@@ -139,7 +163,16 @@ class _MinePageState extends BaseState<MinePage> {
                                   onChanged: (index) =>
                                       _store.switchAlliance(index),
                                 )
-                              : gap(height: 215),
+                              : SizedBox(
+                                  height: 215,
+                                  width: screenWidth,
+                                  child: Center(
+                                    child: Text(
+                                      '您还未加入任何联盟',
+                                      style: Font.minorL,
+                                    ),
+                                  ),
+                                ),
                         ],
                       ),
                     ),
@@ -148,20 +181,23 @@ class _MinePageState extends BaseState<MinePage> {
               ),
             ),
           ),
-          SliverFixedExtentList(
-            itemExtent: 50,
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () => sState(() => _headerHeight -= 10),
-                  child: Container(
-                    alignment: Alignment.center,
-                    color: Colors.lightGreen[100 * ((20 - index) % 9)],
-                    child: Text('list item $index'),
-                  ),
-                );
-              },
-              childCount: 20,
+          SliverVisibility(
+            visible: _store.myAlliances.isNotEmpty,
+            sliver: SliverFixedExtentList(
+              itemExtent: 50,
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return GestureDetector(
+                    onTap: () => sState(() => _headerHeight -= 10),
+                    child: Container(
+                      alignment: Alignment.center,
+                      color: Colors.lightGreen[100 * ((20 - index) % 9)],
+                      child: Text('list item $index'),
+                    ),
+                  );
+                },
+                childCount: 20,
+              ),
             ),
           ),
         ],
@@ -224,33 +260,36 @@ class _MinePageState extends BaseState<MinePage> {
                                           globalUserStore.bean?.username)
                                       ? ''
                                       : '@${globalUserStore.bean.username}',
-                                  style: Font.minor,
+                                  style: Font.minorS,
                                 ),
                               ],
                             ),
                           ),
-                          Visibility(
-                            visible: ObjectUtil.isNotEmpty(
-                                globalUserStore.bean?.areaName),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.location_on,
-                                  color: CColor.hintTextColor,
-                                  size: 14,
-                                ),
-                                Text(
-                                  globalUserStore.bean?.areaName ?? '',
-                                  style: Font.hintXS,
-                                ),
-                              ],
-                            ),
-                          ),
+                          // Visibility(
+                          //   visible: ObjectUtil.isNotEmpty(
+                          //       globalUserStore.bean?.areaName),
+                          //   child: Row(
+                          //     children: [
+                          //       Icon(
+                          //         Icons.location_on,
+                          //         color: CColor.hintTextColor,
+                          //         size: 14,
+                          //       ),
+                          //       Text(
+                          //         globalUserStore.bean?.areaName,
+                          //         style: Font.hintXS,
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                       gap(height: 5),
                       Text(
-                        (globalUserStore.bean?.disc ?? '暂无简介') + '\n',
+                        (ObjectUtil.isEmpty(globalUserStore.bean?.disc)
+                                ? '暂无简介'
+                                : globalUserStore.bean?.disc) +
+                            '\n',
                         style: Font.minorS,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,

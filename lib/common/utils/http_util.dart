@@ -83,7 +83,7 @@ class HttpUtil {
       InterceptorsWrapper(
         onRequest: (RequestOptions options) {
           if (options.path == API.verifyUser || options.path != API.register) {
-            if (options.method.toUpperCase() != 'GET' &&
+            if (options.method.toUpperCase() == 'POST' &&
                 options.data != null &&
                 options.data is Map) {
               List keys = (options.data as Map).keys.toList();
@@ -101,7 +101,8 @@ class HttpUtil {
 
               var hmac = Hmac(sha256, key);
               var digest = hmac.convert(bytes);
-              options.data['signature'] = hex.encode(digest.bytes);
+              var signature = hex.encode(digest.bytes);
+              options.data['signature'] = signature;
             }
             options.headers['uuid'] = user.clientId;
             options.headers['token'] = user.token;
@@ -117,20 +118,23 @@ class HttpUtil {
       dio.interceptors.add(
         InterceptorsWrapper(
           onRequest: (RequestOptions options) {
-            print("================== 请求数据 ==========================");
+            print(
+                "================== ${options.method}请求数据 ==========================");
             print("url = ${options.uri.toString()}");
             print("headers = ${options.headers}");
             print("params = ${options.data}");
           },
           onResponse: (Response response) {
-            print("================== 响应数据 ==========================");
+            print(
+                "================== ${response.request.method}响应数据 ==========================");
             print("url = ${response.request.uri}");
             print("code = ${response.statusCode}");
             print("data = ${response.data}");
 //            print("\n");
           },
           onError: (DioError e) {
-            print("================== 错误响应数据 ======================");
+            print(
+                "================== ${e.request.method}错误响应数据 ======================");
             print("url = ${e.request.uri}");
             print("type = ${e.type}");
             print("message = ${e.message}");

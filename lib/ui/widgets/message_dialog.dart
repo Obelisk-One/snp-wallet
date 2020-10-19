@@ -10,153 +10,136 @@
 import 'package:flutter/material.dart';
 import 'package:snp/common/common.dart';
 
-class MessageDialog extends Dialog {
+// ignore: must_be_immutable
+class MessageDialog extends StatelessWidget {
   final String title;
-  final String message;
-  final String negativeText;
-  final String positiveText;
-  final bool showClose;
-  final Function onCloseEvent;
-  final Function onPositivePressEvent;
+  final message;
+  final String leftText;
+  final String rightText;
+  TextStyle titleStyle;
+  TextStyle messageStyle;
+  TextStyle leftStyle;
+  TextStyle rightStyle;
+  final bool showClose, showLeft, showRight;
+  final Function onLeftClick;
+  final Function onRightClick;
 
   MessageDialog({
-    Key key,
-    @required this.title,
+    this.title = '',
     @required this.message,
-    this.negativeText,
-    this.positiveText,
-    this.onPositivePressEvent,
-    this.showClose = true,
-    @required this.onCloseEvent,
+    this.leftText = '取消',
+    this.rightText = '确定',
+    this.titleStyle,
+    this.messageStyle,
+    this.leftStyle,
+    this.rightStyle,
+    this.showClose = false,
+    this.showLeft = true,
+    this.showRight = true,
+    this.onLeftClick,
+    this.onRightClick,
+    Key key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (titleStyle == null) titleStyle = Font.title;
+    if (messageStyle == null) messageStyle = Font.normal;
+    if (leftStyle == null) leftStyle = Font.minorL;
+    if (rightStyle == null) rightStyle = Font.lightL;
+
     return Padding(
-      padding: sInsetsAll(15),
-      child: Material(
-        type: MaterialType.transparency,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              decoration: ShapeDecoration(
-                color: Color(0xffffffff),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(8.0),
+      padding: sInsetsAll(20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: CColor.lightCardColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              children: [
+                gap(height: 20),
+                Visibility(
+                  visible: title.isNotEmpty,
+                  child: Padding(
+                    padding: sInsetsLTRB(20, 0, 20, 10),
+                    child: Text(title, style: titleStyle),
                   ),
                 ),
-              ),
-              margin: EdgeInsets.all(12.0),
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Stack(
-                      alignment: AlignmentDirectional.centerEnd,
-                      children: <Widget>[
-                        Center(
-                          child: Text(
-                            title,
-                            style: Font.normalL,
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: screenHeight * .5,
+                    maxWidth: screenWidth - sWidth(40),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: sInsetsHV(20, 0),
+                      child: message is String
+                          ? Text(message, style: messageStyle)
+                          : message,
+                    ),
+                  ),
+                ),
+                gap(height: 20),
+                Visibility(
+                  visible: showLeft || showRight,
+                  child: Divider(),
+                ),
+                Visibility(
+                  visible: showLeft || showRight,
+                  child: Container(
+                    height: 45,
+                    child: Row(
+                      children: [
+                        Visibility(
+                          visible: showLeft,
+                          child: Flexible(
+                            flex: 1,
+                            child: CommonButton(
+                              text: leftText,
+                              width: double.infinity,
+                              height: 45,
+                              radius: 0,
+                              elevation: 0,
+                              backColor: Colors.transparent,
+                              textColor: leftStyle.color,
+                              fontSize: leftStyle.fontSize,
+                              onClick: onLeftClick ?? pop,
+                            ),
                           ),
                         ),
-                        _renderCloseButton(context),
+                        VerticalDivider(),
+                        Visibility(
+                          visible: showRight,
+                          child: Flexible(
+                            flex: 1,
+                            child: CommonButton(
+                              text: rightText,
+                              width: double.infinity,
+                              height: 45,
+                              radius: 0,
+                              elevation: 0,
+                              backColor: Colors.transparent,
+                              textColor: rightStyle.color,
+                              fontSize: rightStyle.fontSize,
+                              onClick: onRightClick ?? pop,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                  Container(
-                    color: Color(0xffe0e0e0),
-                    height: 1.0,
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    constraints: BoxConstraints(minHeight: 90.0),
-                    child: Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: IntrinsicHeight(
-                        child: Text(
-                          message,
-                          style: Font.normal,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    color: Color(0xffe0e0e0),
-                    height: 1.0,
-                  ),
-                  this._buildBottomButtonGroup(context,),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _renderCloseButton(BuildContext context){
-    if(showClose){
-      return GestureDetector(
-        onTap: () {
-          Navigator.of(context).maybePop();
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Icon(
-            Icons.close,
-            color: Color(0xffe0e0e0),
           ),
-        ),
-      );
-    }
-    else{
-      return Container();
-    }
-  }
-
-  Widget _buildBottomButtonGroup(BuildContext context,) {
-    var widgets = <Widget>[];
-    if (negativeText != null && negativeText.isNotEmpty)
-      widgets.add(_buildBottomCancelButton(context,));
-    if (positiveText != null && positiveText.isNotEmpty)
-      widgets.add(_buildBottomPositiveButton(context,));
-    return Flex(
-      direction: Axis.horizontal,
-      children: widgets,
-    );
-  }
-
-  Widget _buildBottomCancelButton(BuildContext context,) {
-    return Flexible(
-      fit: FlexFit.tight,
-      child: FlatButton(
-        onPressed: onCloseEvent,
-        child: Text(
-          negativeText,
-          style: Font.hintL,
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildBottomPositiveButton(BuildContext context) {
-    return Flexible(
-      fit: FlexFit.tight,
-      child: FlatButton(
-        onPressed: onPositivePressEvent,
-        child: Text(
-          positiveText,
-          style: Font.normalL,
-        ),
-      ),
-    );
-  }
-
-//  double sFontSize(BuildContext context, double size) {
-//    setDesignWHD(375,667,density: MediaQuery.of(context).devicePixelRatio);
-//    return ScreenUtil.getScaleSp(context, size);
-//  }
+  double get _buttonWidth => (screenWidth - sWidth(40) - 1) / 2;
 }

@@ -152,6 +152,7 @@ class Font {
   static TextStyle minor = ts(c: CColor.minorTextColor);
   static TextStyle hint = ts(c: CColor.hintTextColor);
   static TextStyle light = ts(c: CColor.lightTextColor);
+  static TextStyle red = ts(c: CColor.red);
   static TextStyle overMain = ts(c: CColor.overMainTextColor);
 
   //小字体
@@ -159,6 +160,7 @@ class Font {
   static TextStyle minorS = ts(s: 12, c: CColor.minorTextColor);
   static TextStyle hintS = ts(s: 12, c: CColor.hintTextColor);
   static TextStyle lightS = ts(s: 12, c: CColor.lightTextColor);
+  static TextStyle redS = ts(s: 12, c: CColor.red);
   static TextStyle overMainS = ts(s: 12, c: CColor.overMainTextColor);
 
   //超小字体
@@ -166,6 +168,7 @@ class Font {
   static TextStyle minorXS = ts(s: 10, c: CColor.minorTextColor);
   static TextStyle hintXS = ts(s: 10, c: CColor.hintTextColor);
   static TextStyle lightXS = ts(s: 10, c: CColor.lightTextColor);
+  static TextStyle redXS = ts(s: 10, c: CColor.red);
   static TextStyle overMainXS = ts(s: 10, c: CColor.overMainTextColor);
 
   //大字体
@@ -173,6 +176,7 @@ class Font {
   static TextStyle minorL = ts(s: 16, c: CColor.minorTextColor);
   static TextStyle hintL = ts(s: 16, c: CColor.hintTextColor);
   static TextStyle lightL = ts(s: 16, c: CColor.lightTextColor);
+  static TextStyle redL = ts(s: 16, c: CColor.red);
   static TextStyle overMainL = ts(s: 16, c: CColor.overMainTextColor);
 
   //超大字体
@@ -180,6 +184,7 @@ class Font {
   static TextStyle minorH = ts(s: 18, c: CColor.minorTextColor);
   static TextStyle hintH = ts(s: 18, c: CColor.hintTextColor);
   static TextStyle lightH = ts(s: 18, c: CColor.lightTextColor);
+  static TextStyle redH = ts(s: 18, c: CColor.red);
   static TextStyle overMainH = ts(s: 18, c: CColor.overMainTextColor);
 
 //  //超大加粗字体
