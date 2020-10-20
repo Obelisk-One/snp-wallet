@@ -52,8 +52,8 @@ class SplashPage extends StatelessWidget {
           children: [
             Positioned(
               top: screenHeight / 2 + 80,
-              left: screenWidth / 2 - sWidth(30),
-              width: sWidth(60),
+              left: 0,
+              width: screenWidth,
               child: Center(
                 child: Text(
                   "SNP",

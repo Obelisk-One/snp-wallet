@@ -148,12 +148,12 @@ class HexColor extends Color {
 
 class Font {
   //一般字体
-  static TextStyle normal = ts(c: CColor.textColor);
-  static TextStyle minor = ts(c: CColor.minorTextColor);
-  static TextStyle hint = ts(c: CColor.hintTextColor);
-  static TextStyle light = ts(c: CColor.lightTextColor);
-  static TextStyle red = ts(c: CColor.red);
-  static TextStyle overMain = ts(c: CColor.overMainTextColor);
+  static TextStyle normal = ts(s: 14,c: CColor.textColor);
+  static TextStyle minor = ts(s: 14,c: CColor.minorTextColor);
+  static TextStyle hint = ts(s: 14,c: CColor.hintTextColor);
+  static TextStyle light = ts(s: 14,c: CColor.lightTextColor);
+  static TextStyle red = ts(s: 14,c: CColor.red);
+  static TextStyle overMain = ts(s: 14,c: CColor.overMainTextColor);
 
   //小字体
   static TextStyle normalS = ts(s: 12, c: CColor.textColor);
