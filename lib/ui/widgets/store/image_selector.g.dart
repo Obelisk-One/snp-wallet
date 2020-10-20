@@ -114,6 +114,17 @@ mixin _$ImageSelectorStore on ImageSelectorMobx, Store {
   }
 
   @override
+  dynamic setTargetDir(String dir) {
+    final _$actionInfo = _$ImageSelectorMobxActionController.startAction(
+        name: 'ImageSelectorMobx.setTargetDir');
+    try {
+      return super.setTargetDir(dir);
+    } finally {
+      _$ImageSelectorMobxActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   dynamic retryUpload(ImageSelectorItem item) {
     final _$actionInfo = _$ImageSelectorMobxActionController.startAction(
         name: 'ImageSelectorMobx.retryUpload');

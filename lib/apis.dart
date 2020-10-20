@@ -34,4 +34,10 @@ class API {
   static final String applyJoinToAlliance = 'api/v1/league/join';
 
   static final String wallet = 'api/v1/wallet/list';
+
+  static final String postContent='api/v1/league/dynamic/push';
+  static final String newestContent='api/v1/league/dynamic/news';
+  static final String topContent='api/v1/league/dynamic/tops';
+  static final String contentLine='api/v1/league/dynamic/dialog/tree';
+  static final String comments='api/v1/league/dynamic/dialog/comment';
 }

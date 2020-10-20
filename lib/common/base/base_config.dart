@@ -38,5 +38,6 @@ class Config {
   static const String oss_style_org = '_org';
   static const String oss_style_thumb = '_thumb';
 
-  static const String event_bus_switch_alliance = 'switch_alliance';
+  static const String event_bus_switch_alliance = 'event_bus_switch_alliance';
+  static const String event_bus_posted_content = 'event_bus_posted_content';
 }

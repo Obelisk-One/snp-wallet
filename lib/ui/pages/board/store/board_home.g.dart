@@ -223,6 +223,13 @@ mixin _$BoardHomeStore on BoardHomeMobx, Store {
     return _$fetchMyCapacityAsyncAction.run(() => super.fetchMyCapacity());
   }
 
+  final _$doStakeAsyncAction = AsyncAction('BoardHomeMobx.doStake');
+
+  @override
+  Future doStake(int value, int userId) {
+    return _$doStakeAsyncAction.run(() => super.doStake(value, userId));
+  }
+
   final _$BoardHomeMobxActionController =
       ActionController(name: 'BoardHomeMobx');
 

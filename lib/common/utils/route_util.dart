@@ -112,7 +112,7 @@ class RouteUtil {
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
-  static void showModelPage(Widget page) {
+  static void showModelPage(Widget page, [Function receive]) {
     showModalBottomSheet(
       context: rootKey.currentContext,
       elevation: 10,
@@ -121,10 +121,8 @@ class RouteUtil {
       isScrollControlled: true,
       enableDrag: false,
       builder: (_) => page,
-    );
+    ).then(receive ?? (data) {});
   }
-
-
 
   static showImagePicker(BuildContext context) async {
     return await showModalBottomSheet(

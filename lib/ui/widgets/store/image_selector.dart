@@ -29,6 +29,8 @@ abstract class ImageSelectorMobx with Store {
 
   Function uploadDone;
 
+  String _targetDir = Config.oss_remote_dir_apply;
+
   @action
   addImage(ImageSelectorItem item) => this.imgList.add(item);
 
@@ -48,6 +50,11 @@ abstract class ImageSelectorMobx with Store {
     else if (uploadDone != null) uploadDone();
   }
 
+  @action
+  setTargetDir(String dir){
+    this._targetDir=dir;
+  }
+
   _doUpload(ImageSelectorItem item) {
     final _next = () {
       int _index = this.imgList.indexOf(item) + 1;
@@ -58,23 +65,16 @@ abstract class ImageSelectorMobx with Store {
     if (item.path.isNotEmpty && !item.uploaded) {
       oss.uploadImage(
         item.path,
-        Config.oss_remote_dir_apply,
+        _targetDir,
         onFinish: (success, key, msg) {
-          if (success) {
-            this.updateListItem(
-              item: item,
-              key: key,
-              uploaded: true,
-              isError: false,
-            );
-          } else {
-            this.updateListItem(
-              item: item,
-              key: '',
-              uploaded: false,
-              isError: true,
-            );
-          }
+          this.updateListItem(
+            item: item,
+            key: success ? key : '',
+            uploaded: success,
+            isError: !success,
+          );
+          if (!success) toast(msg);
+          print(msg);
           _next();
         },
       );
@@ -88,7 +88,7 @@ abstract class ImageSelectorMobx with Store {
     this.updateListItem(item: item, isError: false);
     oss.uploadImage(
       item.path,
-      Config.oss_remote_dir_apply,
+      _targetDir,
       onFinish: (success, key, msg) {
         dismissLoading();
         if (success) {

@@ -30,9 +30,7 @@ class AllianceApplyCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // height: 50,
       padding: sInsetsLTRB(15, 10, 15, 0),
-      // alignment: Alignment.center,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -26,6 +26,11 @@ class SListView extends StatefulWidget {
   final String apiPath;
   final String method;
   final Map<String, dynamic> params;
+  final Color backColor;
+  final Widget header;
+  final Function onRefresh;
+  final bool showEmpty;
+  final Widget emptyView;
 
   const SListView({
     Key key,
@@ -37,6 +42,11 @@ class SListView extends StatefulWidget {
     this.method = 'GET',
     this.separated = false,
     this.controller,
+    this.backColor = Colors.white,
+    this.header,
+    this.onRefresh,
+    this.showEmpty = true,
+    this.emptyView,
   }) : super(key: key);
 
   @override
@@ -50,7 +60,8 @@ class _SListViewState extends BaseState<SListView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Padding(
+    return Container(
+      color: widget.backColor,
       padding: widget.padding,
       child: Observer(
         builder: (_) => EasyRefresh.custom(
@@ -66,17 +77,7 @@ class _SListViewState extends BaseState<SListView>
             overScroll: true,
 //            enableInfiniteLoad: false,
           ),
-          emptyWidget: _store.refreshError
-              ? EmptyListView(
-                  type: 0,
-                  msg: _store.errorData.msg,
-                  onRefresh: () async => await _store.refresh(),
-                )
-              : (_store.dataList.length <= 0
-                  ? EmptyListView(
-                      onRefresh: () async => await _store.refresh(),
-                    )
-                  : null),
+          emptyWidget: _emptyView,
           slivers: <Widget>[
             SliverList(
               delegate: widget.separated && _store.count > 1
@@ -87,15 +88,21 @@ class _SListViewState extends BaseState<SListView>
                               endIndent: 10,
                             )
                           : _item(index ~/ 2),
-                      childCount: _store.count * 2 - 1,
+                      childCount:
+                          (_store.count + (widget.header == null ? 0 : 1)) * 2 -
+                              1,
                     )
                   : SliverChildBuilderDelegate(
                       (context, index) => _item(index),
-                      childCount: _store.count,
+                      childCount:
+                          _store.count + (widget.header == null ? 0 : 1),
                     ),
             ),
           ],
-          onRefresh: () async => await _store.refresh(),
+          onRefresh: () async {
+            await _store.refresh();
+            if (widget.onRefresh != null) widget.onRefresh();
+          },
           onLoad: () async => await _store.loadMore(),
         ),
       ),
@@ -153,41 +160,68 @@ class _SListViewState extends BaseState<SListView>
       );
 
   _item(index) {
-    if (_store.noMore && index >= _store.count - 1)
+    if (widget.header != null && index == 0)
+      return widget.header;
+    else if (index >= _store.count + (widget.header == null ? 0 : 1) - 1)
       return Container(
         width: screenWidth,
         height: sHeight(40),
         child: Center(
           child: Text(
-            '-----我是有底线的-----',
-            style: Font.hintS,
-          ),
-        ),
-      );
-    else if (_store.loadMoreError && index >= _store.count - 1)
-      return Container(
-        width: screenWidth,
-        height: sHeight(40),
-        child: Center(
-          child: Text(
-            '-----啊哦,出错了-----',
+            _bottomText,
             style: Font.hintS,
           ),
         ),
       );
     else
       return widget.itemView(
-        index,
-        _store.dataList[index],
+        index - (widget.header == null ? 0 : 1),
+        _store.dataList[index - (widget.header == null ? 0 : 1)],
       );
   }
 
   callRefresh() {
     _store.refresh();
+    if (widget.onRefresh != null) widget.onRefresh();
   }
 
   updateParams(Map params) {
     if (params != null) _store.setParams(params);
+  }
+
+  int get dataLength => _store.dataList.length;
+
+  String get _bottomText {
+    if (_store.noMore)
+      return widget.showEmpty ? '-----我是有底线的-----' : '';
+    else if (_store.loadMoreError)
+      return '-----啊哦,出错了-----';
+    else
+      return '------';
+  }
+
+  Widget get _emptyView {
+    if (_store.refreshError)
+      return EmptyListView(
+        type: 0,
+        msg: _store.errorData.msg,
+        onRefresh: () async {
+          await _store.refresh();
+          if (widget.onRefresh != null) widget.onRefresh();
+        },
+      );
+    else if (_store.dataList.length <= 0 && widget.showEmpty) {
+      if (widget.emptyView == null)
+        return EmptyListView(
+          onRefresh: () async {
+            await _store.refresh();
+            if (widget.onRefresh != null) widget.onRefresh();
+          },
+        );
+      else
+        return widget.emptyView;
+    } else
+      return null;
   }
 
   @override
@@ -214,6 +248,8 @@ class SListViewController {
       this._state.callRefresh();
     }
   }
+
+  int get dataLength => _state.dataLength;
 
   // 状态
   _SListViewState _state;

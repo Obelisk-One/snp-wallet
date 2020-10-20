@@ -101,7 +101,6 @@ class InviteUserView extends StatelessWidget {
         print('upload not finished');
         return;
       }
-      print('upload done');
       http.post(
         API.getInviteCode,
         params: {

@@ -12,7 +12,7 @@ import 'package:snp/common/common.dart';
 import 'package:snp/ui/base/base_stateful.dart';
 import 'package:snp/ui/pages/news/alliance_brief_page.dart';
 import 'package:snp/ui/pages/news/fresh_new_list_page.dart';
-import 'package:snp/ui/pages/news/hottest_new_list_page.dart';
+import 'package:snp/ui/pages/news/top_news_list_page.dart';
 import 'package:snp/ui/pages/news/post_content_view.dart';
 import 'package:snp/ui/store/main_store.dart';
 import 'package:snp/ui/store/user.dart';
@@ -70,7 +70,7 @@ class _NewsHomePageState extends BaseState<NewsHomePage>
         controller: _controller,
         children: <Widget>[
           FreshNewListPage(),
-          HottestNewListPage(),
+          TopNewsList(),
         ],
       ),
       floatingActionButton: Observer(
@@ -78,7 +78,7 @@ class _NewsHomePageState extends BaseState<NewsHomePage>
           visible: globalMainStore.isInAlliance,
           child: FloatingActionButton(
             onPressed: () => RouteUtil.showModelPage(
-              PostContentPage(replyUser: '狗剩'),
+              PostContentPage(),
             ),
             child: Icon(Icons.add),
           ),

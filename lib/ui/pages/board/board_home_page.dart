@@ -19,7 +19,7 @@ import 'package:snp/ui/pages/board/invite_user_view.dart';
 import 'package:snp/ui/pages/board/store/board_home.dart';
 import 'package:snp/ui/store/main_store.dart';
 import 'package:snp/ui/widgets/alliance_apply_cell_view.dart';
-import 'package:snp/ui/widgets/alliance_stake_cell.dart';
+import 'package:snp/ui/widgets/alliance_stake_cell_view.dart';
 import 'package:snp/ui/widgets/avatar_view.dart';
 import 'package:snp/ui/widgets/circle_loader_view.dart';
 import 'package:snp/ui/widgets/message_dialog.dart';
