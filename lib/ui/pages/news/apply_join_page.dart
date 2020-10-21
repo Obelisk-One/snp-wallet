@@ -13,6 +13,12 @@ import 'package:snp/ui/store/main_store.dart';
 import 'package:snp/ui/widgets/image_selector_view.dart';
 
 class ApplyJoinPage extends StatefulWidget {
+  final int id;
+
+  const ApplyJoinPage(this.id, {Key key})
+      : assert(id != null),
+        super(key: key);
+
   @override
   _ApplyJoinPageState createState() => _ApplyJoinPageState();
 }
@@ -155,7 +161,7 @@ class _ApplyJoinPageState extends BaseState<ApplyJoinPage> {
       http.post(
         API.applyJoinToAlliance,
         params: {
-          'league_id': globalMainStore.allianceId,
+          'league_id': widget.id,
           'code': _codeController.text,
           'message': _reasonController.text,
           'images': _store.keys,

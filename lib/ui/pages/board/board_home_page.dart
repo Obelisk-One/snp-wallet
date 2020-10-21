@@ -45,22 +45,21 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: EasyRefresh.custom(
-        controller: _refreshController,
-        scrollController: _scrollController,
-        header: LinkHeader(
-          _headerNotifier,
-          completeDuration: Duration(milliseconds: 500),
-        ),
-        footer: BallPulseFooter(
-          color: CColor.mainColor,
-          enableInfiniteLoad: false,
-        ),
-        slivers: <Widget>[
-          Observer(
-            name: 'header',
-            builder: (_) => SliverAppBar(
+    return Observer(
+      builder: (_) => Scaffold(
+        body: EasyRefresh.custom(
+          controller: _refreshController,
+          scrollController: _scrollController,
+          header: LinkHeader(
+            _headerNotifier,
+            completeDuration: Duration(milliseconds: 500),
+          ),
+          footer: BallPulseFooter(
+            color: CColor.mainColor,
+            enableInfiniteLoad: false,
+          ),
+          slivers: <Widget>[
+            SliverAppBar(
               centerTitle: true,
               title: Opacity(
                 opacity: _store.titleOpacity,
@@ -73,14 +72,11 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
               pinned: true,
               expandedHeight: statusBarHeight + 240,
               flexibleSpace: FlexibleSpaceBar(
-                background: Observer(builder: (_) => _renderHeader()),
+                background: _renderHeader(),
               ),
               leading: CircleLoader(_headerNotifier),
             ),
-          ),
-          Observer(
-            name: 'tab',
-            builder: (_) => SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: TabView(
                 tabs: ['声誉分布', 'FEC分布'],
                 views: <Widget>[
@@ -92,39 +88,37 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                 height: 200,
               ),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: gap(height: 20),
-          ),
-          SliverToBoxAdapter(
-            child: Divider(
-              thickness: 10,
-              color: CColor.bgGrayColor,
+            SliverToBoxAdapter(
+              child: gap(height: 20),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  margin: sInsetsHV(15, 0),
-                  alignment: Alignment.topLeft,
-                  child: TabBar(
-                    controller: _tabController,
-                    isScrollable: true,
-                    indicatorColor: CColor.mainColor,
-                    labelColor: CColor.lightTextColor,
-                    labelStyle: Font.lightL,
-                    unselectedLabelColor: CColor.minorTextColor,
-                    unselectedLabelStyle: Font.minorL,
-                    tabs: <Widget>[
-                      Tab(text: "人员管理"),
-                      Tab(text: "人员激励"),
-                    ],
+            SliverToBoxAdapter(
+              child: Divider(
+                thickness: 10,
+                color: CColor.bgGrayColor,
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    margin: sInsetsHV(15, 0),
+                    alignment: Alignment.topLeft,
+                    child: TabBar(
+                      controller: _tabController,
+                      isScrollable: true,
+                      indicatorColor: CColor.mainColor,
+                      labelColor: CColor.lightTextColor,
+                      labelStyle: Font.lightL,
+                      unselectedLabelColor: CColor.minorTextColor,
+                      unselectedLabelStyle: Font.minorL,
+                      tabs: <Widget>[
+                        Tab(text: "人员管理"),
+                        Tab(text: "人员激励"),
+                      ],
+                    ),
                   ),
-                ),
-                Observer(
-                  builder: (_) => Visibility(
+                  Visibility(
                     visible: globalMainStore.isInAlliance,
                     child: FlatButton(
                       child: Row(
@@ -145,19 +139,17 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                           RouteUtil.showModelPage(InviteUserView()),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          SliverVisibility(
-            visible: _showFirst,
-            sliver: Observer(
-              builder: (_) => SliverList(
+            SliverVisibility(
+              visible: _showFirst,
+              sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
+                      (BuildContext context, int index) {
                     if (index < _store.applyList.length) {
                       AllianceApplyBean _bean =
-                          _store.applyList.elementAt(index);
+                      _store.applyList.elementAt(index);
                       return AllianceApplyCell(
                         _bean,
                         onVote: () {
@@ -182,7 +174,7 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                                     ),
                                     TextSpan(
                                       text:
-                                          ' 加入联盟吗?\n对方将获得 ${_store.allianceInfo.prestige} 票数',
+                                      ' 加入联盟吗?\n对方将获得 ${_store.allianceInfo.prestige} 票数',
                                       style: Font.normal,
                                     ),
                                   ],
@@ -216,8 +208,8 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                             _store.applyList.isEmpty
                                 ? '暂无数据'
                                 : _store.noMore
-                                    ? '-----我是有底线的-----'
-                                    : _store.isError ? '获取数据失败,请重试' : '',
+                                ? '-----我是有底线的-----'
+                                : _store.isError ? '获取数据失败,请重试' : '',
                             style: Font.hintS,
                           ),
                         ),
@@ -227,13 +219,11 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                 ),
               ),
             ),
-          ),
-          SliverVisibility(
-            visible: !_showFirst,
-            sliver: Observer(
-              builder: (_) => SliverList(
+            SliverVisibility(
+              visible: !_showFirst,
+              sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
+                      (BuildContext context, int index) {
                     if (index < _store.stakeList.length) {
                       if (index == 0 && globalMainStore.isInAlliance)
                         return Column(
@@ -267,20 +257,20 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                 ),
               ),
             ),
-          ),
-        ],
-        onRefresh: () async {
-          // await Future.delayed(Duration(seconds: 2), () {});
-          await _store.fetchAllianceInfo();
-          await _store.fetchAllianceApply(true);
-          await _store.fetchMyCapacity();
-          await _store.fetchAllianceStake();
-        },
-        onLoad: _showFirst && !_store.noMore
-            ? () async {
-                await _store.fetchAllianceApply(false);
-              }
-            : null,
+          ],
+          onRefresh: () async {
+            // await Future.delayed(Duration(seconds: 2), () {});
+            await _store.fetchAllianceInfo();
+            await _store.fetchAllianceApply(true);
+            await _store.fetchMyCapacity();
+            await _store.fetchAllianceStake();
+          },
+          onLoad: _showFirst && !_store.noMore
+              ? () async {
+                  await _store.fetchAllianceApply(false);
+                }
+              : null,
+        ),
       ),
     );
   }

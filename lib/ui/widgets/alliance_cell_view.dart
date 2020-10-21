@@ -73,7 +73,8 @@ class AllianceCellView extends StatelessWidget {
                           width: sWidth(70),
                           height: sHeight(23),
                           elevation: 0,
-                          onClick: () => RouteUtil.showModelPage(ApplyJoinPage()),
+                          onClick: () =>
+                              RouteUtil.showModelPage(ApplyJoinPage(bean.id)),
                         )
                       : Text(
                           bean.exist ? '已加入' : '',

@@ -62,6 +62,21 @@ mixin _$MineStore on MineMobx, Store {
     });
   }
 
+  final _$contentListAtom = Atom(name: 'MineMobx.contentList');
+
+  @override
+  ObservableList<ContentBean> get contentList {
+    _$contentListAtom.reportRead();
+    return super.contentList;
+  }
+
+  @override
+  set contentList(ObservableList<ContentBean> value) {
+    _$contentListAtom.reportWrite(value, super.contentList, () {
+      super.contentList = value;
+    });
+  }
+
   final _$currentIndexAtom = Atom(name: 'MineMobx.currentIndex');
 
   @override
@@ -180,6 +195,7 @@ mixin _$MineStore on MineMobx, Store {
 brightness: ${brightness},
 titleOpacity: ${titleOpacity},
 myAlliances: ${myAlliances},
+contentList: ${contentList},
 currentIndex: ${currentIndex},
 page: ${page},
 noMore: ${noMore},

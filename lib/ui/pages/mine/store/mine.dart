@@ -14,8 +14,10 @@
 import 'dart:ui';
 
 import 'package:mobx/mobx.dart';
+import 'package:snp/beans/content_bean.dart';
 import 'package:snp/beans/my_alliance_bean.dart';
 import 'package:snp/common/common.dart';
+import 'package:snp/ui/store/main_store.dart';
 
 part 'mine.g.dart';
 
@@ -33,6 +35,9 @@ abstract class MineMobx with Store {
 
   @observable
   ObservableList<MyAllianceBean> myAlliances = ObservableList();
+
+  @observable
+  ObservableList<ContentBean> contentList = ObservableList();
 
   @observable
   int currentIndex = 0;
@@ -63,8 +68,7 @@ abstract class MineMobx with Store {
   fetchMyAlliances() async {
     await http.get(
       API.myAlliances,
-      onSuccess: (data) =>
-      this.myAlliances =
+      onSuccess: (data) => this.myAlliances =
           ObservableList.of(getMyAllianceBeanList(data.data)),
       onError: (error) => this.myAlliances.clear(),
     );
@@ -74,9 +78,44 @@ abstract class MineMobx with Store {
   switchAlliance(int index) {
     if (this.myAlliances.isNotEmpty && this.myAlliances.length > index) {
       this.currentIndex = index;
+      fetchContentList(true);
     }
   }
 
   @action
-  fetchContentList(bool refresh) async {}
+  fetchContentList(bool refresh) async {
+    if (refresh)
+      this.page = 1;
+    else {
+      if (this.noMore) return;
+      this.page++;
+    }
+    this.isError = false;
+
+    var _onError = (error) {
+      this.isError = true;
+      if (refresh) this.contentList.clear();
+      toast(error.msg);
+    };
+    var response = await http.get(
+      API.mineContent,
+      params: {
+        'league_id': currentAlliance.leagueId,
+        'page': this.page,
+        'size': 5,
+      },
+      onError: _onError,
+    );
+
+    if ((response.code ?? 0) == 1) {
+      List<ContentBean> _dataList = getContentBeanList(response.data['data']);
+      if (refresh)
+        this.contentList = ObservableList.of(_dataList);
+      else
+        this.contentList.addAll(_dataList);
+      this.noMore = response.data['current_page'] >= response.data['last_page'];
+      print('@@@@@@@@@@@@$noMore');
+    } else
+      _onError(response);
+  }
 }

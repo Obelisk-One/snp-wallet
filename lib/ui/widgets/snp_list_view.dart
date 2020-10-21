@@ -191,10 +191,15 @@ class _SListViewState extends BaseState<SListView>
 
   int get dataLength => _store.dataList.length;
 
+  bool get isLoading => _store.isLoading;
+
   String get _bottomText {
-    if (_store.noMore)
-      return widget.showEmpty ? '-----我是有底线的-----' : '';
-    else if (_store.loadMoreError)
+    if (_store.noMore) {
+      if (widget.showEmpty || dataLength > 0)
+        return '-----我是有底线的-----';
+      else
+        return '';
+    } else if (_store.loadMoreError)
       return '-----啊哦,出错了-----';
     else
       return '------';
@@ -250,6 +255,8 @@ class SListViewController {
   }
 
   int get dataLength => _state.dataLength;
+
+  bool get isLoading => _state.isLoading;
 
   // 状态
   _SListViewState _state;

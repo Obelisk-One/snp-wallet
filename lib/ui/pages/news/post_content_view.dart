@@ -85,7 +85,7 @@ class PostContentPage extends StatelessWidget {
           TextField(
             controller: _controller,
             cursorColor: CColor.mainColor,
-            style: Font.light,
+            style: Font.normal,
             maxLength: 200,
             maxLines: 8,
             decoration: InputDecoration(
@@ -140,7 +140,7 @@ class PostContentPage extends StatelessWidget {
           'images': _store.keys,
         };
       http.post(
-        API.postContent,
+        replyBean == null ? API.postContent : API.postComment,
         params: _params,
         onSuccess: (data) {
           dismissLoading();

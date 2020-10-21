@@ -22,7 +22,7 @@ class ContentCell extends StatefulWidget {
   final EdgeInsetsGeometry margin;
   final bool canReply, showLine, showFull;
   final ContentClickedCallback onClick;
-  final bool isLast, isFirst;
+  final bool isLast, isFirst, showBottomLine;
 
   const ContentCell({
     Key key,
@@ -34,6 +34,7 @@ class ContentCell extends StatefulWidget {
     this.onClick,
     this.isLast = false,
     this.isFirst = false,
+    this.showBottomLine = false,
   })  : assert(bean != null),
         super(key: key);
 
@@ -52,6 +53,7 @@ class _ContentCellState extends BaseState<ContentCell> {
       child: Container(
         margin: widget.margin ?? sInsetsAll(0),
         padding: sInsetsHV(10, 0),
+        color: CColor.bgColor,
         child: Stack(
           children: [
             Positioned.fill(
@@ -116,10 +118,10 @@ class _ContentCellState extends BaseState<ContentCell> {
                           ),
                         ],
                       ),
-                      gap(height: 5),
+                      gap(height: 10),
                       _contentView,
-                      gap(height: 5),
-                      _imageView,
+                      gap(height: 10),
+                      _lastStyleImageView,
                       gap(height: 10),
                       _bottomView,
                       gap(height: 10),
@@ -136,118 +138,166 @@ class _ContentCellState extends BaseState<ContentCell> {
                         ),
                       ),
                       Expanded(
-                        child: Padding(
-                          padding: sInsetsHV(0, 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  RichText(
-                                    text: TextSpan(
-                                      children: <InlineSpan>[
-                                        TextSpan(
-                                          text: '${widget.bean.nickname} ',
-                                          style: Font.normal,
-                                        ),
-                                        TextSpan(
-                                          text:
-                                              '${widget.bean.username.isEmpty ? '' : '@${widget.bean.username}'}',
-                                          style: Font.minorS,
-                                        ),
-                                      ],
-                                    ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            gap(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    children: <InlineSpan>[
+                                      TextSpan(
+                                        text: '${widget.bean.nickname} ',
+                                        style: Font.normal,
+                                      ),
+                                      TextSpan(
+                                        text:
+                                            '${widget.bean.username.isEmpty ? '' : '@${widget.bean.username}'}',
+                                        style: Font.minorS,
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    TimelineUtil.format(
-                                      widget.bean.createtime * 1000,
-                                      locale: 'zh',
-                                    ),
-                                    style: Font.minorXS,
+                                ),
+                                Text(
+                                  TimelineUtil.format(
+                                    widget.bean.createtime * 1000,
+                                    locale: 'zh',
                                   ),
-                                ],
-                              ),
-                              gap(height: 5),
-                              _contentView,
-                              gap(height: 5),
-                              _imageView,
-                              gap(height: 10),
-                              _bottomView,
-                            ],
-                          ),
+                                  style: Font.minorXS,
+                                ),
+                              ],
+                            ),
+                            gap(height: 5),
+                            _contentView,
+                            gap(height: 5),
+                            _imageView,
+                            gap(height: 10),
+                            _bottomView,
+                            gap(height: 10),
+                          ],
                         ),
                       ),
                     ],
                   ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: widget.showBottomLine ? Divider() : gap(),
+            ),
           ],
         ),
       ),
     );
   }
 
-  get _contentView=>Text(
-    widget.bean.message,
-    style:
-    widget.isLast ? Font.normalH : Font.normal,
-    maxLines: widget.showFull ? 99 : 3,
-    overflow: TextOverflow.ellipsis,
-  );
+  get _contentView => Text(
+        widget.bean.message,
+        style: widget.isLast ? Font.normalH : Font.normal,
+        maxLines: widget.showFull ? 99 : 3,
+        overflow: TextOverflow.ellipsis,
+      );
 
-  get _imageView=>Row(
-    children: widget.bean.images
-        .map(
-          (e) => GestureDetector(
-        onTap: () => ImageSelector.previewWebImages(
-          widget.bean.images.indexOf(e),
-          widget.bean.images,
-        ),
-        child: WebImage(
-          url: e,
-          radius: 5,
-          width: imageSize,
-          height: imageSize,
-          style: Config.oss_style_thumb,
-          margin: sInsetsLTRB(
-            widget.bean.images.first == e ? 0 : 5,
-            0,
-            0,
-            0,
+  get _imageView => Row(
+        children: widget.bean.images.map(
+          (e) {
+            int _index = widget.bean.images.indexOf(e);
+            return GestureDetector(
+              onTap: () => ImageSelector.previewWebImages(
+                _index,
+                widget.bean.images,
+              ),
+              child: WebImage(
+                url: e,
+                radius: 5,
+                width: imageSize,
+                height: imageSize,
+                style: Config.oss_style_thumb,
+                margin: sInsetsLTRB(_index == 0 ? 0 : 5, 0, 0, 0),
+              ),
+            );
+          },
+        ).toList(),
+      );
+
+  get _lastStyleImageView {
+    int _length = widget.bean.images.length;
+    switch (_length) {
+      case 1:
+        String _url = widget.bean.images[0];
+        double _width = screenWidth - sWidth(20);
+        double _height = _width / 1.618;
+        return GestureDetector(
+          onTap: () => ImageSelector.previewWebImages(0, widget.bean.images),
+          child: WebImage(
+            url: _url,
+            radius: 5,
+            width: _width,
+            height: _height,
+            style: Config.oss_style_org,
           ),
-        ),
-      ),
-    )
-        .toList(),
-  );
+        );
+        break;
+      case 2:
+      case 3:
+        double _imageGap = 5;
+        double _imageSize =
+            (screenWidth - sWidth(20 + _imageGap * (_length - 1))) / _length;
+        return Row(
+          children: widget.bean.images.map(
+            (e) {
+              int _index = widget.bean.images.indexOf(e);
+              return GestureDetector(
+                onTap: () => ImageSelector.previewWebImages(
+                  _index,
+                  widget.bean.images,
+                ),
+                child: WebImage(
+                  url: e,
+                  radius: 5,
+                  width: _imageSize,
+                  height: _imageSize,
+                  style: Config.oss_style_thumb,
+                  margin: sInsetsLTRB(_index == 0 ? 0 : _imageGap, 0, 0, 0),
+                ),
+              );
+            },
+          ).toList(),
+        );
+        break;
+      default:
+        return gap();
+    }
+  }
 
-  get _bottomView=>GestureDetector(
-    onTap: widget.canReply
-        ? () => RouteUtil.showModelPage(
-      PostContentPage(replyBean: widget.bean),
-          (data) {
-        if (data != null &&
-            data is ContentBean &&
-            data.id == widget.bean.id)
-          sState(() => _replyCount++);
-      },
-    )
-        : null,
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          SnpIcon.reply,
-          size: 16,
-          color: CColor.iconColor,
+  get _bottomView => GestureDetector(
+        onTap: widget.canReply
+            ? () => RouteUtil.showModelPage(
+                  PostContentPage(replyBean: widget.bean),
+                  (data) {
+                    if (data != null &&
+                        data is ContentBean &&
+                        data.id == widget.bean.id) sState(() => _replyCount++);
+                  },
+                )
+            : null,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              SnpIcon.reply,
+              size: 16,
+              color: CColor.iconColor,
+            ),
+            Text(
+              '  $_replyCount  ',
+              style: Font.minor,
+            ),
+          ],
         ),
-        Text(
-          '  $_replyCount  ',
-          style: Font.minor,
-        ),
-      ],
-    ),
-  );
+      );
 
   @override
   void initState() {

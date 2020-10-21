@@ -8,7 +8,6 @@
  * @author   Dino
  */
 class API {
-  static final String listData = 'api';
   static final String verifyUser = 'api/v1/user/import';
   static final String register = 'api/v1/user/register';
   static final String updateUserInfo = 'api/v1/user/updating';
@@ -35,9 +34,11 @@ class API {
 
   static final String wallet = 'api/v1/wallet/list';
 
-  static final String postContent='api/v1/league/dynamic/push';
-  static final String newestContent='api/v1/league/dynamic/news';
-  static final String topContent='api/v1/league/dynamic/tops';
-  static final String contentLine='api/v1/league/dynamic/dialog/tree';
-  static final String comments='api/v1/league/dynamic/dialog/comment';
+  static final String postContent = 'api/v1/league/dynamic/push';
+  static final String postComment = 'api/v1/league/dynamic/comment';
+  static final String newestContent = 'api/v1/league/dynamic/news';
+  static final String topContent = 'api/v1/league/dynamic/tops';
+  static final String contentLine = 'api/v1/league/dynamic/dialog/tree';
+  static final String comments = 'api/v1/league/dynamic/dialog/comment';
+  static final String mineContent = 'api/v1/league/dynamic/mine';
 }

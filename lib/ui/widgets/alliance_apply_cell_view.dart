@@ -192,12 +192,12 @@ class AllianceApplyCell extends StatelessWidget {
                                       text: TextSpan(
                                         children: <InlineSpan>[
                                           TextSpan(
-                                            text: '${e.name}   ',
+                                            text: '${e.name}\n',
                                             style: Font.normalL,
                                           ),
                                           TextSpan(
                                             text: '声誉：',
-                                            style: Font.minor,
+                                            style: Font.minorS,
                                           ),
                                           TextSpan(
                                             text: e.prestige.toString(),
