@@ -143,8 +143,8 @@ class _MinePageState extends BaseState<MinePage> {
                       left: 0,
                       right: 0,
                       top: _allianceImageHeight - sHeight(35),
+                      key: _key,
                       child: Column(
-                        key: _key,
                         children: [
                           _renderPersonalCard(),
                           _store.myAlliances.isNotEmpty
@@ -159,7 +159,7 @@ class _MinePageState extends BaseState<MinePage> {
                                   initialIndex:
                                       _store.myAlliances.isNotEmpty ? 0 : -1,
                                   tabMargin: sInsetsHV(15, 0),
-                                  height: sHeight(170),
+                                  height: sHeight(114) + sWidth(40),
                                   onChanged: (index) =>
                                       _store.switchAlliance(index),
                                 )
@@ -316,13 +316,15 @@ class _MinePageState extends BaseState<MinePage> {
       );
 
   Widget _renderAllianceCard(MyAllianceBean item) => Container(
-        margin: sInsetsHV(15, 10),
+        margin: sInsetsLTRB(15, 10, 15, 0),
         padding: sInsetsAll(10),
         decoration: BoxDecoration(
+          // color: CColor.red,
           color: CColor.lightCardColor,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             RichText(
@@ -345,43 +347,41 @@ class _MinePageState extends BaseState<MinePage> {
               '我的勋章',
               style: Font.normalH,
             ),
-            gap(height: 10),
-            Expanded(
-              child: item.medal.isEmpty
-                  ? Center(
-                      child: Text(
-                        '您在该联盟暂未获得任何徽章',
-                        style: Font.minor,
-                      ),
-                    )
-                  : SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: item.medal
-                            .map((e) => _medalItem(e, item.medal.length))
-                            .toList(),
-                      ),
+            gap(height: 5),
+            item.medal.isEmpty
+                ? Center(
+                    child: Text(
+                      '您在该联盟暂未获得任何徽章',
+                      style: Font.minor,
                     ),
-            ),
+                  )
+                : SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: item.medal
+                          .map((e) => _medalItem(e, item.medal.length))
+                          .toList(),
+                    ),
+                  ),
           ],
         ),
       );
 
   Widget _medalItem(Medal medal, int count) {
     double _itemWidth = (screenWidth - sWidth(50)) / (count <= 3 ? count : 3.5);
-    return Container(
+    return SizedBox(
       width: _itemWidth,
-      height: double.infinity,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           WebImage(
             url: medal.image,
-            width: 40,
-            height: 40,
+            width: sWidth(40),
+            height: sWidth(40),
           ),
-          gap(height: 10),
+          gap(height: 5),
           Text(
             medal.name,
             style: Font.normal,
@@ -396,11 +396,15 @@ class _MinePageState extends BaseState<MinePage> {
     super.initState();
     _scrollController = ScrollController()
       ..addListener(() {
-        if (_scrollController.offset >= _allianceImageHeight - sHeight(35))
+        double _value = _allianceImageHeight - sHeight(35);
+        if (_scrollController.offset >= _value)
           _store.setBrightness(Brightness.light);
-        else if (_scrollController.offset < 480)
+        else if (_scrollController.offset < _value)
           _store.setBrightness(Brightness.dark);
-        double opacity = (_scrollController.offset - 480).round() / 50;
+        double opacity =
+            (_scrollController.offset - _allianceImageHeight + sHeight(35))
+                    .round() /
+                50;
         opacity = opacity > 1 ? 1 : (opacity < 0 ? 0 : opacity);
         _store.setTitleOpacity(opacity);
       });
@@ -435,10 +439,17 @@ class _MinePageState extends BaseState<MinePage> {
   }
 
   _resetHeaderHeight(_) {
+    RenderBox _renderBox = _key.currentContext.findRenderObject();
+    Offset _offset = _renderBox.localToGlobal(Offset.zero);
     sState(
-      () => _headerHeight = _key.currentContext.size.height +
-          _allianceImageHeight -
-          statusBarHeight,
+      () => _headerHeight = _offset.dy + _allianceImageHeight,
     );
+    // print('@@@@@@@@@@@@@' + _key.currentContext.size.height.toString());
+    // print('@@@@@@@@@@@@@' + _allianceImageHeight.toString());
+    // print('@@@@@@@@@@@@@' + _headerHeight.toString());
+    // print('@@@@@@@@@@@@@' + _offset.dy.toString());
+    // _renderBox = _tabViewKey.currentContext.findRenderObject();
+    // _offset = _renderBox.localToGlobal(Offset.zero);
+    // print('@@@@@@@@@@@@@' + _renderBox.size.height.toString());
   }
 }

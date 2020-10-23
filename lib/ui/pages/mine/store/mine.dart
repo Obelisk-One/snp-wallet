@@ -84,6 +84,7 @@ abstract class MineMobx with Store {
 
   @action
   fetchContentList(bool refresh) async {
+    if (currentAlliance == null) return;
     if (refresh)
       this.page = 1;
     else {
@@ -100,7 +101,7 @@ abstract class MineMobx with Store {
     var response = await http.get(
       API.mineContent,
       params: {
-        'league_id': currentAlliance.leagueId,
+        'league_id': currentAlliance?.leagueId,
         'page': this.page,
         'size': 5,
       },
@@ -114,7 +115,6 @@ abstract class MineMobx with Store {
       else
         this.contentList.addAll(_dataList);
       this.noMore = response.data['current_page'] >= response.data['last_page'];
-      print('@@@@@@@@@@@@$noMore');
     } else
       _onError(response);
   }

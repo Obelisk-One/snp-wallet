@@ -24,8 +24,8 @@ class NewsHomePage extends StatefulWidget {
   _NewsHomePageState createState() => new _NewsHomePageState();
 }
 
-class _NewsHomePageState extends BaseState<NewsHomePage>
-    with TickerProviderStateMixin {
+class _NewsHomePageState extends State<NewsHomePage>
+    with SingleTickerProviderStateMixin {
   TabController _controller;
 
   @override
@@ -69,7 +69,7 @@ class _NewsHomePageState extends BaseState<NewsHomePage>
       body: TabBarView(
         controller: _controller,
         children: <Widget>[
-          FreshNewListPage(),
+          FreshNewList(),
           TopNewsList(),
         ],
       ),
@@ -102,20 +102,5 @@ class _NewsHomePageState extends BaseState<NewsHomePage>
   void dispose() {
     _controller = null;
     super.dispose();
-  }
-
-  @override
-  void onResume() {
-    super.onResume();
-  }
-
-  @override
-  void didUpdateWidget(NewsHomePage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
   }
 }

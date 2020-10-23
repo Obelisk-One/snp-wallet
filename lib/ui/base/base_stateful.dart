@@ -12,53 +12,53 @@ import 'package:snp/common/utils/route_util.dart';
 
 abstract class BaseState<T extends StatefulWidget> extends State<T> {
 
-  bool canPop() {
-    return RouteUtil.canPop(context);
-  }
-
-  void pushName(String name) {
-    RouteUtil.pushName(name, context);
-  }
-
-  void pop() {
-    RouteUtil.pop(context);
-  }
-
-  void maybePop() {
-    RouteUtil.maybePop(context);
-  }
-
-  void popWithData(data) {
-    RouteUtil.popWithData(data, context);
-  }
-
-  void popToRoot() {
-    RouteUtil.popToRoot(context);
-  }
-
-  void push(Widget widget) {
-    RouteUtil.push(widget, context);
-  }
-
-  void scalePush(Widget widget) {
-    RouteUtil.scalePush(widget, context);
-  }
-
-  Future pushAndReturn(Widget widget) {
-    return RouteUtil.pushAndReturn(widget, context);
-  }
-
-  void pushAndRemoveUntil(Widget widget) {
-    RouteUtil.pushAndRemoveUntil(widget, context);
-  }
-
-  void pushReplacement(Widget widget) {
-    RouteUtil.pushReplacement(widget, context);
-  }
-
-  void pushAndReceive(Widget widget, Function receive) {
-    RouteUtil.pushAndReceive(widget, receive, context);
-  }
+  // bool canPop() {
+  //   return RouteUtil.canPop(context);
+  // }
+  //
+  // void pushName(String name) {
+  //   RouteUtil.pushName(name, context);
+  // }
+  //
+  // void pop() {
+  //   RouteUtil.pop(context);
+  // }
+  //
+  // void maybePop() {
+  //   RouteUtil.maybePop(context);
+  // }
+  //
+  // void popWithData(data) {
+  //   RouteUtil.popWithData(data, context);
+  // }
+  //
+  // void popToRoot() {
+  //   RouteUtil.popToRoot(context);
+  // }
+  //
+  // void push(Widget widget) {
+  //   RouteUtil.push(widget, context);
+  // }
+  //
+  // void scalePush(Widget widget) {
+  //   RouteUtil.scalePush(widget, context);
+  // }
+  //
+  // Future pushAndReturn(Widget widget) {
+  //   return RouteUtil.pushAndReturn(widget, context);
+  // }
+  //
+  // void pushAndRemoveUntil(Widget widget) {
+  //   RouteUtil.pushAndRemoveUntil(widget, context);
+  // }
+  //
+  // void pushReplacement(Widget widget) {
+  //   RouteUtil.pushReplacement(widget, context);
+  // }
+  //
+  // void pushAndReceive(Widget widget, Function receive) {
+  //   RouteUtil.pushAndReceive(widget, receive, context);
+  // }
 
   sState(Function func) {
     if (!mounted) return;

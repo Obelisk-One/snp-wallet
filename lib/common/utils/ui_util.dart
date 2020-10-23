@@ -34,7 +34,9 @@ double sFontSize(double size, {sc = true}) {
   if (!sc) return size;
   setDesignWHD(375, 667,
       density: ScreenUtil.getInstance().mediaQueryData.devicePixelRatio);
-  return ScreenUtil.getInstance().getSp(size);
+  double _size = ScreenUtil.getInstance().getSp(size);
+  // print('sFontSize:$size=>$_size');
+  return _size;
 }
 
 double sHeight(double size) {
@@ -110,6 +112,7 @@ line({double width = 1.0, double height = 1.0, EdgeInsets margin}) {
 }
 
 ts({double s = 14, Color c = CColor.textColor, sc = true}) {
+  // print('sFont:s=$s c=$c => ${TextStyle(fontSize: sFontSize(s, sc: sc), color: c)}');
   return TextStyle(fontSize: sFontSize(s, sc: sc), color: c);
 }
 
@@ -203,11 +206,11 @@ class Font {
 
 class NFont {
   //一般字体
-  static TextStyle normal = ts(c: CColor.textColor, sc: false);
-  static TextStyle minor = ts(c: CColor.minorTextColor, sc: false);
-  static TextStyle hint = ts(c: CColor.hintTextColor, sc: false);
-  static TextStyle light = ts(c: CColor.lightTextColor, sc: false);
-  static TextStyle overMain = ts(c: CColor.overMainTextColor, sc: false);
+  static TextStyle normal = ts(s: 14, c: CColor.textColor, sc: false);
+  static TextStyle minor = ts(s: 14, c: CColor.minorTextColor, sc: false);
+  static TextStyle hint = ts(s: 14, c: CColor.hintTextColor, sc: false);
+  static TextStyle light = ts(s: 14, c: CColor.lightTextColor, sc: false);
+  static TextStyle overMain = ts(s: 14, c: CColor.overMainTextColor, sc: false);
 
   //小字体
   static TextStyle normalS = ts(s: 12, c: CColor.textColor, sc: false);

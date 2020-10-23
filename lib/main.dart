@@ -76,7 +76,10 @@ void main() async {
                 },
               ),
               textTheme: TextTheme(
-                bodyText2: Font.normal,
+                bodyText2: TextStyle(
+                  fontSize: sFontSize(14),
+                  color: CColor.textColor,
+                ),
               ),
               appBarTheme: AppBarTheme(
                   elevation: 0.0,

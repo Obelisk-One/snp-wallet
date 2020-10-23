@@ -57,7 +57,7 @@ abstract class MainStoreMobx with Store {
   @observable
   ObservableList<Widget> pages = ObservableList.of(
     [
-      NewsHomePage(),
+      NewsHomePage(key: Key('NewsHomePage')),
       Container(),
       Container(),
       Container(),

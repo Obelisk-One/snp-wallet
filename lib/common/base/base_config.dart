@@ -13,6 +13,7 @@ class Config {
 //  static const String baseUrl = 'https://snp.koar.cn/';
   static const String baseUrl = 'https://api.tpy.pub/';
   static const bool isDebug = true;
+  static const bool printHttp = true;
   static const int listPageSize = 10;
   static const double allianceImageRatio = 60 / 44;
   static const String defaultAvatar = 'https://oss.tpy.pub/logo.jpg';

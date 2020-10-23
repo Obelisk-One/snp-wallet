@@ -76,7 +76,10 @@ class _ContentDetailPageState extends BaseState<ContentDetailPage> {
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: sInsetsHV(10, 5),
-                child: Text('评论列表'),
+                child: Text(
+                  '评论列表',
+                  style: Font.normal,
+                ),
               ),
             ),
           )

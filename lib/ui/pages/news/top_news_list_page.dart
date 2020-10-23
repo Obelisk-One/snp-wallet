@@ -15,20 +15,44 @@ import 'package:snp/ui/store/main_store.dart';
 import 'package:snp/ui/widgets/content_cell_view.dart';
 import 'package:snp/ui/widgets/snp_list_view.dart';
 
-class TopNewsList extends StatelessWidget {
+class TopNewsList extends StatefulWidget {
+  @override
+  _TopNewsListState createState() => _TopNewsListState();
+}
+
+class _TopNewsListState extends State<TopNewsList> {
+  Widget _body;
+
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (_) => SListView(
-        apiPath: API.topContent,
-        params: {'league_id': globalMainStore.allianceId},
-        backColor: CColor.bgGrayColor,
-        itemView: (index, item) => ContentCell(
-          bean: ContentBean.fromJson(item),
-          margin: sInsetsLTRB(0, index == 0 ? 0 : 10, 0, 0),
-          onClick: (id) => push(ContentDetailPage(id: id)),
-        ),
+    //TODO 在push或pop的时候会重复调用build方法,导致ListView重复调用接口刷新数据,暂时未找到解决方案,先在initState中实例化ListView
+    return _body;
+    // return SListView(
+    //   key: Key('FreshNewList'),
+    //   apiPath: API.topContent,
+    //   params: {'league_id': globalMainStore.allianceId},
+    //   backColor: CColor.bgGrayColor,
+    //   itemView: (index, item) => ContentCell(
+    //     bean: ContentBean.fromJson(item),
+    //     margin: sInsetsLTRB(0, index == 0 ? 0 : 10, 0, 0),
+    //     onClick: (id) => push(ContentDetailPage(id: id)),
+    //   ),
+    // );
+  }
+
+  @override
+  void initState() {
+    _body = SListView(
+      key: Key('FreshNewList'),
+      apiPath: API.topContent,
+      params: {'league_id': globalMainStore.allianceId},
+      backColor: CColor.bgGrayColor,
+      itemView: (index, item) => ContentCell(
+        bean: ContentBean.fromJson(item),
+        margin: sInsetsLTRB(0, index == 0 ? 0 : 10, 0, 0),
+        onClick: (id) => push(ContentDetailPage(id: id)),
       ),
     );
+    super.initState();
   }
 }

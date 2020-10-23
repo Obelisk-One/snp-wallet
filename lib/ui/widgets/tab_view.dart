@@ -62,7 +62,8 @@ class TabView extends StatefulWidget {
   _TabViewState createState() => _TabViewState();
 }
 
-class _TabViewState extends BaseState<TabView> with TickerProviderStateMixin {
+class _TabViewState extends State<TabView>
+    with SingleTickerProviderStateMixin {
   GlobalKey _key = GlobalKey();
   TabController _tabController;
   double _height;
@@ -70,14 +71,14 @@ class _TabViewState extends BaseState<TabView> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final _tabView = TabBarView(
-      key: _key,
       controller: _tabController,
+      key: _key,
       physics:
           widget.bouncing ? BouncingScrollPhysics() : ClampingScrollPhysics(),
       children: widget.views,
     );
     return Column(
-      // mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           alignment:
@@ -101,37 +102,40 @@ class _TabViewState extends BaseState<TabView> with TickerProviderStateMixin {
             }).toList(),
           ),
         ),
-        _height == null
-            ? Expanded(child: _tabView)
+        widget.height == null
+            ? Flexible(child: _tabView)
             : Container(
-                height: _height,
+                height: widget.height,
                 child: _tabView,
               ),
       ],
     );
   }
 
-//  @override
-//  void didChangeDependencies() {
-//    WidgetsBinding.instance.addPostFrameCallback(_getHeight);
-//    super.didChangeDependencies();
-//  }
-//
-//  @override
-//  void didUpdateWidget(TabView oldWidget) {
-//    WidgetsBinding.instance.addPostFrameCallback(_getHeight);
-//    super.didUpdateWidget(oldWidget);
-//  }
-//
-//  _getHeight(_) {
-//    print(_key.currentContext.size.height);
-////    sState(() => _height = _key.currentContext.size.height);
-//  }
+  // @override
+  // void didChangeDependencies() {
+  //   WidgetsBinding.instance.addPostFrameCallback(_getHeight);
+  //   super.didChangeDependencies();
+  // }
+  //
+  // @override
+  // void didUpdateWidget(TabView oldWidget) {
+  //   WidgetsBinding.instance.addPostFrameCallback(_getHeight);
+  //   super.didUpdateWidget(oldWidget);
+  // }
+  //
+  // _getHeight(_) {
+  //   // print(_key.currentContext.size.height);
+  //   // sState(() => _height = _key.currentContext.size.height);
+  //   RenderBox _renderBox = _key.currentContext.findRenderObject();
+  //   Offset _offset = _renderBox.localToGlobal(Offset.zero);
+  //   print('=====================' + _renderBox.size.height.toString());
+  // }
 
   @override
   void initState() {
     super.initState();
-    _height = widget.height;
+    _height = widget.height ?? double.infinity;
     _tabController = TabController(
       vsync: this,
       length: widget.tabs.length,

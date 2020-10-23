@@ -118,27 +118,32 @@ class HttpUtil {
       dio.interceptors.add(
         InterceptorsWrapper(
           onRequest: (RequestOptions options) {
-            print(
-                "================== ${options.method}请求数据 ==========================");
-            print("url = ${options.uri.toString()}");
-            print("headers = ${options.headers}");
-            print("params = ${options.data}");
+            if (Config.printHttp) {
+              print(
+                  "================== ${options.method}请求数据 ==========================");
+              print("url = ${options.uri.toString()}");
+              print("headers = ${options.headers}");
+              print("params = ${options.data}");
+            }
           },
           onResponse: (Response response) {
-            print(
-                "================== ${response.request.method}响应数据 ==========================");
-            print("url = ${response.request.uri}");
-            print("code = ${response.statusCode}");
-            print("data = ${response.data}");
+            if (Config.printHttp) {
+              print(
+                  "================== ${response.request.method}响应数据 ==========================");
+              print("url = ${response.request.uri}");
+              print("code = ${response.statusCode}");
+              print("data = ${response.data}");
+            }
 //            print("\n");
           },
           onError: (DioError e) {
-            print(
-                "================== ${e.request.method}错误响应数据 ======================");
-            print("url = ${e.request.uri}");
-            print("type = ${e.type}");
-            print("message = ${e.message}");
-            print("error = ${e.error.toString()}");
+            if (Config.printHttp) {
+              print(
+                  "================== ${e.request.method}错误响应数据 ======================");
+              print("url = ${e.request.uri}");
+              print("type = ${e.type}");
+              print("message = ${e.message}");
+              print("error = ${e.error.toString()}");
 ////            print("\n");
 //            if (e.type == DioErrorType.RESPONSE &&
 //                e.response.statusCode == 401
@@ -146,6 +151,7 @@ class HttpUtil {
 ////              Toast.show('登录信息失效,请重新登录');
 //              dio.clear();
 //            }
+            }
           },
         ),
       );

@@ -15,6 +15,7 @@ import 'package:snp/beans/alliance_apply_bean.dart';
 import 'package:snp/common/common.dart';
 import 'package:snp/common/utils/event_bus_util.dart';
 import 'package:snp/ui/base/base_stateful.dart';
+import 'package:snp/ui/pages/board/alliance_bio_edit_page.dart';
 import 'package:snp/ui/pages/board/invite_user_view.dart';
 import 'package:snp/ui/pages/board/store/board_home.dart';
 import 'package:snp/ui/store/main_store.dart';
@@ -146,10 +147,10 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
               visible: _showFirst,
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
+                  (BuildContext context, int index) {
                     if (index < _store.applyList.length) {
                       AllianceApplyBean _bean =
-                      _store.applyList.elementAt(index);
+                          _store.applyList.elementAt(index);
                       return AllianceApplyCell(
                         _bean,
                         onVote: () {
@@ -174,7 +175,7 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                                     ),
                                     TextSpan(
                                       text:
-                                      ' 加入联盟吗?\n对方将获得 ${_store.allianceInfo.prestige} 票数',
+                                          ' 加入联盟吗?\n对方将获得 ${_store.allianceInfo.prestige} 票数',
                                       style: Font.normal,
                                     ),
                                   ],
@@ -208,8 +209,8 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                             _store.applyList.isEmpty
                                 ? '暂无数据'
                                 : _store.noMore
-                                ? '-----我是有底线的-----'
-                                : _store.isError ? '获取数据失败,请重试' : '',
+                                    ? '-----我是有底线的-----'
+                                    : _store.isError ? '获取数据失败,请重试' : '',
                             style: Font.hintS,
                           ),
                         ),
@@ -223,7 +224,7 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
               visible: !_showFirst,
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
+                  (BuildContext context, int index) {
                     if (index < _store.stakeList.length) {
                       if (index == 0 && globalMainStore.isInAlliance)
                         return Column(
@@ -405,11 +406,24 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        '联盟的简介：${(_store.allianceInfo?.bio ?? '暂无简介')}\n',
-                        style: Font.overMainS,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      GestureDetector(
+                        onTap: ObjectUtil.isEmpty(_store.allianceInfo?.bio)
+                            ? null
+                            : () => showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (_) => MessageDialog(
+                                    title: '联盟简介',
+                                    message: _store.allianceInfo.bio,
+                                    showLeft: false,
+                                  ),
+                                ),
+                        child: Text(
+                          '联盟的简介：${(_store.allianceInfo?.bio ?? '暂无简介')}\n',
+                          style: Font.overMainS,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       gap(height: 5),
                       Row(
@@ -427,7 +441,16 @@ class _BoardHomePageState extends BaseState<BoardHomePage>
                           Visibility(
                             visible: globalMainStore.isInAlliance,
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                RouteUtil.showModelPage(
+                                  AllianceBioEditPage(
+                                    bio: _store.allianceInfo?.bio ?? '',
+                                  ),
+                                  (data) {
+                                    if (data) _refreshController.callRefresh();
+                                  },
+                                );
+                              },
                               child: Icon(
                                 Icons.edit_outlined,
                                 size: 18,

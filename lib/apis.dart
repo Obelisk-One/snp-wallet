@@ -18,6 +18,7 @@ class API {
   static final String allianceList = 'api/v1/league/list';
   static final String canCreateAlliance = 'api/v1/league/verify/create';
   static final String createAlliance = 'api/v1/league/create';
+  static final String allianceBioEdit = 'api/v1/league/up/bio';
   static final String getInviteCode = 'api/v1/league/invite';
   static final String allianceBrief = 'api/v1/league/bulletin';
   static final String allianceMineMessage = 'api/v1/league/mine';

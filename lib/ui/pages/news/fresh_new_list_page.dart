@@ -16,29 +16,33 @@ import 'package:snp/ui/store/main_store.dart';
 import 'package:snp/ui/widgets/content_cell_view.dart';
 import 'package:snp/ui/widgets/snp_list_view.dart';
 
-class FreshNewListPage extends StatefulWidget {
+class FreshNewList extends StatefulWidget {
+  const FreshNewList({Key key}) : super(key: key);
+
   @override
-  _FreshNewListPageState createState() => _FreshNewListPageState();
+  _FreshNewListState createState() => _FreshNewListState();
 }
 
-class _FreshNewListPageState extends State<FreshNewListPage> {
+class _FreshNewListState extends State<FreshNewList> {
   SListViewController _controller;
+  Widget _body;
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (_) => SListView(
-        controller: _controller,
-        apiPath: API.newestContent,
-        params: {'league_id': globalMainStore.allianceId},
-        backColor: CColor.bgGrayColor,
-        itemView: (index, item) => ContentCell(
-          bean: ContentBean.fromJson(item),
-          margin: sInsetsLTRB(0, index == 0 ? 0 : 10, 0, 0),
-          onClick: (id) => push(ContentDetailPage(id: id)),
-        ),
-      ),
-    );
+    //TODO 在push或pop的时候会重复调用build方法,导致ListView重复调用接口刷新数据,暂时未找到解决方案,先在initState中实例化ListView
+    return _body;
+    // return SListView(
+    //   key: Key('FreshNewList'),
+    //   controller: _controller,
+    //   apiPath: API.newestContent,
+    //   params: {'league_id': globalMainStore.allianceId},
+    //   backColor: CColor.bgGrayColor,
+    //   itemView: (index, item) => ContentCell(
+    //     bean: ContentBean.fromJson(item),
+    //     margin: sInsetsLTRB(0, index == 0 ? 0 : 10, 0, 0),
+    //     onClick: (id) => RouteUtil.push(ContentDetailPage(id: id), context),
+    //   ),
+    // );
   }
 
   @override
@@ -49,6 +53,19 @@ class _FreshNewListPageState extends State<FreshNewListPage> {
       (arg) {
         if (arg) _controller.callRefresh();
       },
+    );
+
+    _body = SListView(
+      key: Key('FreshNewList'),
+      controller: _controller,
+      apiPath: API.newestContent,
+      params: {'league_id': globalMainStore.allianceId},
+      backColor: CColor.bgGrayColor,
+      itemView: (index, item) => ContentCell(
+        bean: ContentBean.fromJson(item),
+        margin: sInsetsLTRB(0, index == 0 ? 0 : 10, 0, 0),
+        onClick: (id) => RouteUtil.push(ContentDetailPage(id: id), context),
+      ),
     );
     super.initState();
   }

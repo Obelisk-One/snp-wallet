@@ -32,6 +32,7 @@ class _MainPageState extends BaseState<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('MainPage.build()');
     return WillPopScope(
       child: Scaffold(
         key: globalMainStore.scaffoldKey,
@@ -55,16 +56,6 @@ class _MainPageState extends BaseState<MainPage> {
   void initState() {
     globalUserStore.fetchUserInfo();
     super.initState();
-  }
-
-  @override
-  void didUpdateWidget(MainPage oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
   }
 
   _renderBottomNavigationBar() => Observer(
